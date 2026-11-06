@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lumora-Bilderrahmen verbinden",
+        "description": "Adresse der Lumora-Weboberfläche (z. B. https://192.168.1.50:8443) und API-Token aus Lumora unter „Home Assistant → Steuerung per REST“.",
+        "data": {
+          "url": "Adresse",
+          "token": "API-Token",
+          "verify_ssl": "Zertifikat prüfen (nur bei eigenem, vertrauenswürdigem Zertifikat)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "API-Token erneuern",
+        "description": "Der API-Token wurde in Lumora geändert. Bitte den aktuellen Token aus „Home Assistant → Steuerung per REST“ eintragen.",
+        "data": { "token": "API-Token" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Lumora ist unter dieser Adresse nicht erreichbar.",
+      "invalid_auth": "Der API-Token ist falsch."
+    },
+    "abort": {
+      "already_configured": "Dieser Bilderrahmen ist bereits eingerichtet.",
+      "reauth_successful": "Der API-Token wurde aktualisiert."
+    }
+  },
+  "entity": {
+    "switch": {
+      "display": { "name": "Bildschirm" },
+      "away": { "name": "Abwesenheitsmodus" },
+      "schedule": { "name": "Zeitplan" }
+    },
+    "number": { "brightness": { "name": "Helligkeit" } },
+    "sensor": {
+      "lux": { "name": "Umgebungslicht" },
+      "photos": { "name": "Fotos" },
+      "next_on": { "name": "Nächstes Einschalten" },
+      "version": { "name": "Version" }
+    },
+    "binary_sensor": { "motion": { "name": "Bewegung" } },
+    "button": {
+      "next": { "name": "Nächstes Foto" },
+      "prev": { "name": "Vorheriges Foto" },
+      "pause": { "name": "Diashow anhalten" },
+      "resume": { "name": "Diashow fortsetzen" },
+      "dismiss": { "name": "Einblendung schließen" },
+      "restart": { "name": "App neu starten" }
+    },
+    "notify": { "message": { "name": "Nachricht" } }
+  },
+  "services": {
+    "show_camera": {
+      "name": "Kamera einblenden",
+      "description": "Zeigt das Live-Bild einer Kamera aus Home Assistant auf dem Bilderrahmen (z. B. Türkamera beim Klingeln). Lumora braucht dafür die Home-Assistant-Adresse und einen Token in seinen Einstellungen.",
+      "fields": {
+        "device_id": { "name": "Bilderrahmen", "description": "Leer = alle Lumora-Bilderrahmen." },
+        "camera": { "name": "Kamera", "description": "Kamera-Entität." },
+        "duration": { "name": "Dauer", "description": "So lange bleibt das Bild eingeblendet." },
+        "title": { "name": "Titel", "description": "Überschrift, z. B. „Es klingelt“." },
+        "subtitle": { "name": "Untertitel", "description": "Zweite Zeile." }
+      }
+    },
+    "show_image": {
+      "name": "Bild einblenden",
+      "description": "Zeigt ein Bild per Adresse (http/https oder Pfad in Home Assistant wie /api/camera_proxy/…).",
+      "fields": {
+        "device_id": { "name": "Bilderrahmen", "description": "Leer = alle Lumora-Bilderrahmen." },
+        "url": { "name": "Bildadresse", "description": "Adresse des Bildes." },
+        "duration": { "name": "Dauer", "description": "So lange bleibt das Bild eingeblendet." },
+        "title": { "name": "Titel", "description": "Überschrift." },
+        "subtitle": { "name": "Untertitel", "description": "Zweite Zeile." }
+      }
+    },
+    "notify": {
+      "name": "Nachricht anzeigen",
+      "description": "Blendet eine Nachricht als Banner oben auf dem Bilderrahmen ein.",
+      "fields": {
+        "device_id": { "name": "Bilderrahmen", "description": "Leer = alle Lumora-Bilderrahmen." },
+        "message": { "name": "Nachricht", "description": "Text der Nachricht." },
+        "title": { "name": "Titel", "description": "Überschrift." },
+        "duration": { "name": "Dauer", "description": "So lange bleibt die Nachricht sichtbar." }
+      }
+    },
+    "dismiss": {
+      "name": "Einblendung schließen",
+      "description": "Schließt eine Kamera- oder Bild-Einblendung.",
+      "fields": { "device_id": { "name": "Bilderrahmen", "description": "Leer = alle Lumora-Bilderrahmen." } }
+    },
+    "display_on_for": {
+      "name": "Bildschirm vorübergehend einschalten",
+      "description": "Schaltet den Bildschirm für einige Minuten ein, auch außerhalb der Betriebszeit.",
+      "fields": {
+        "device_id": { "name": "Bilderrahmen", "description": "Leer = alle Lumora-Bilderrahmen." },
+        "minutes": { "name": "Minuten", "description": "Danach gilt wieder der Zeitplan." }
+      }
+    }
+  }
+}

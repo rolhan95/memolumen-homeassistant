@@ -1,0 +1,99 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect a Lumora picture frame",
+        "description": "Address of the Lumora web interface (e.g. https://192.168.1.50:8443) and the API token from Lumora under \"Home Assistant → Control via REST\".",
+        "data": {
+          "url": "Address",
+          "token": "API token",
+          "verify_ssl": "Verify certificate (only with your own trusted certificate)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Renew API token",
+        "description": "The API token was changed in Lumora. Please enter the current token from \"Home Assistant → Control via REST\".",
+        "data": { "token": "API token" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Lumora cannot be reached at this address.",
+      "invalid_auth": "The API token is wrong."
+    },
+    "abort": {
+      "already_configured": "This picture frame is already set up.",
+      "reauth_successful": "The API token was updated."
+    }
+  },
+  "entity": {
+    "switch": {
+      "display": { "name": "Screen" },
+      "away": { "name": "Away mode" },
+      "schedule": { "name": "Schedule" }
+    },
+    "number": { "brightness": { "name": "Brightness" } },
+    "sensor": {
+      "lux": { "name": "Ambient light" },
+      "photos": { "name": "Photos" },
+      "next_on": { "name": "Next switch-on" },
+      "version": { "name": "Version" }
+    },
+    "binary_sensor": { "motion": { "name": "Motion" } },
+    "button": {
+      "next": { "name": "Next photo" },
+      "prev": { "name": "Previous photo" },
+      "pause": { "name": "Pause slideshow" },
+      "resume": { "name": "Resume slideshow" },
+      "dismiss": { "name": "Close overlay" },
+      "restart": { "name": "Restart app" }
+    },
+    "notify": { "message": { "name": "Message" } }
+  },
+  "services": {
+    "show_camera": {
+      "name": "Show camera",
+      "description": "Shows the live image of a Home Assistant camera on the picture frame (e.g. door camera when the bell rings). Lumora needs the Home Assistant address and a token in its settings.",
+      "fields": {
+        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
+        "camera": { "name": "Camera", "description": "Camera entity." },
+        "duration": { "name": "Duration", "description": "How long the image stays on screen." },
+        "title": { "name": "Title", "description": "Heading, e.g. \"Someone is at the door\"." },
+        "subtitle": { "name": "Subtitle", "description": "Second line." }
+      }
+    },
+    "show_image": {
+      "name": "Show image",
+      "description": "Shows an image by address (http/https or a Home Assistant path like /api/camera_proxy/…).",
+      "fields": {
+        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
+        "url": { "name": "Image address", "description": "Address of the image." },
+        "duration": { "name": "Duration", "description": "How long the image stays on screen." },
+        "title": { "name": "Title", "description": "Heading." },
+        "subtitle": { "name": "Subtitle", "description": "Second line." }
+      }
+    },
+    "notify": {
+      "name": "Show message",
+      "description": "Shows a message as a banner at the top of the picture frame.",
+      "fields": {
+        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
+        "message": { "name": "Message", "description": "Message text." },
+        "title": { "name": "Title", "description": "Heading." },
+        "duration": { "name": "Duration", "description": "How long the message stays visible." }
+      }
+    },
+    "dismiss": {
+      "name": "Close overlay",
+      "description": "Closes a camera or image overlay.",
+      "fields": { "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." } }
+    },
+    "display_on_for": {
+      "name": "Turn screen on temporarily",
+      "description": "Turns the screen on for some minutes, even outside the operating hours.",
+      "fields": {
+        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
+        "minutes": { "name": "Minutes", "description": "Afterwards the schedule applies again." }
+      }
+    }
+  }
+}

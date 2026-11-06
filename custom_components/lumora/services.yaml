@@ -1,0 +1,97 @@
+show_camera:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: lumora
+          multiple: true
+    camera:
+      required: true
+      selector:
+        entity:
+          domain: camera
+    duration:
+      default: 30
+      selector:
+        number:
+          min: 3
+          max: 600
+          unit_of_measurement: s
+    title:
+      selector:
+        text:
+    subtitle:
+      selector:
+        text:
+
+show_image:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: lumora
+          multiple: true
+    url:
+      required: true
+      selector:
+        text:
+    duration:
+      default: 30
+      selector:
+        number:
+          min: 3
+          max: 600
+          unit_of_measurement: s
+    title:
+      selector:
+        text:
+    subtitle:
+      selector:
+        text:
+
+notify:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: lumora
+          multiple: true
+    message:
+      required: true
+      selector:
+        text:
+          multiline: true
+    title:
+      selector:
+        text:
+    duration:
+      default: 10
+      selector:
+        number:
+          min: 3
+          max: 600
+          unit_of_measurement: s
+
+dismiss:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: lumora
+          multiple: true
+
+display_on_for:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: lumora
+          multiple: true
+    minutes:
+      required: true
+      default: 10
+      selector:
+        number:
+          min: 1
+          max: 1440
+          unit_of_measurement: min

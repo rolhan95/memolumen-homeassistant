@@ -1,0 +1,31 @@
+"""Gemeinsame Basis für alle Lumora-Entitäten."""
+
+from __future__ import annotations
+
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from .const import DOMAIN
+from .coordinator import LumoraCoordinator
+
+
+class LumoraEntity(CoordinatorEntity[LumoraCoordinator]):
+    _attr_has_entity_name = True
+
+    def __init__(self, coordinator: LumoraCoordinator, key: str) -> None:
+        super().__init__(coordinator)
+        device = coordinator.data.get("device") or {}
+        device_id = device.get("id") or coordinator.config_entry.entry_id
+        self._attr_unique_id = f"{device_id}_{key}"
+        self._attr_translation_key = key
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, device_id)},
+            name=f"Lumora {device.get('name') or ''}".strip(),
+            manufacturer="Suderland IT",
+            model="Lumora Bilderrahmen",
+            sw_version=coordinator.data.get("version"),
+            configuration_url=coordinator.api.url + "/admin/",
+        )
+
+    async def _refresh(self) -> None:
+        await self.coordinator.async_request_refresh()
