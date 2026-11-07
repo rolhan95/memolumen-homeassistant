@@ -219,10 +219,6 @@
           "doorbell_webhook": "Home Assistant provides an address; when a device in your home network calls it (GET or POST), the doorbell rings on the frame.",
           "doorbell_webhook_id": "Any ID (letters, digits, - and _). To keep an existing Shelly setting, enter the previous ID here and disable the old automation first."
         }
-      },
-      "webhook": {
-        "title": "Address for the Shelly",
-        "description": "Enter this address in the Shelly:\n\n`{webhook_url}`\n\n**Shelly Plus/Pro/Gen3/Gen4:** Shelly web UI → Actions → new action → trigger \"Input toggled on\" or \"Button push\" → action \"Webhook / call URL\" → paste the address.\n\n**Shelly Gen1 (e.g. Shelly 1, i3):** Settings → I/O URL actions → \"Button switched ON url\" or \"Button short press url\" → paste the address and enable it.\n\nThe address only works in your home network. \"Submit\" saves the options."
       }
     },
     "error": {

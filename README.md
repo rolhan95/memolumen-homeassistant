@@ -58,7 +58,7 @@ Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren** wähl
 Alternativ oder zusätzlich zu den Entitäten kann ein Gerät im Heimnetz die Klingel über einen Webhook auslösen:
 
 1. In den Optionen **Klingel per Webhook** einschalten. Die **Webhook-ID** ist mit einer zufälligen ID vorbelegt und frei änderbar (Buchstaben, Ziffern, `-`, `_`).
-2. Nach dem Speichern zeigt der Dialog die Adresse, z. B. `http://homeassistant.local:8123/api/webhook/<ID>`.
+2. Nach dem Speichern erscheint die Adresse als Benachrichtigung in Home Assistant (und beim nächsten Öffnen oben im Optionsdialog), z. B. `http://homeassistant.local:8123/api/webhook/<ID>`.
 3. Im Shelly eintragen:
    - **Shelly Plus/Pro/Gen3/Gen4:** Weboberfläche → Actions → neue Aktion → Auslöser „Input toggled on“ bzw. „Button push“ → Webhook/URL aufrufen.
    - **Shelly Gen1:** Settings → I/O URL actions → „Button switched ON url“ bzw. „Button short press url“.

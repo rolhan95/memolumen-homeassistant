@@ -9,7 +9,7 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_TOKEN, CONF_URL
-from homeassistant.components import webhook
+from homeassistant.components import persistent_notification, webhook
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
@@ -109,9 +109,6 @@ class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
 class LumoraOptionsFlow(OptionsFlow):
     """Optionen: Türklingel – Auslöser (Entitäten und/oder Webhook) und Kamera für die Einblendung am Rahmen."""
 
-    def __init__(self) -> None:
-        self._data: dict[str, Any] = {}
-
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         current = dict(self.config_entry.options)
@@ -133,9 +130,8 @@ class LumoraOptionsFlow(OptionsFlow):
             elif use_hook and webhook_in_use(self.hass, hook_id, own_hook):
                 errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_in_use"
             else:
-                self._data = user_input
                 if use_hook:
-                    return await self.async_step_webhook()
+                    _notify_webhook(self.hass, hook_id)
                 return self.async_create_entry(data=user_input)
 
         suggested = user_input or current
@@ -170,12 +166,17 @@ class LumoraOptionsFlow(OptionsFlow):
             description_placeholders={"webhook_url": webhook_url(self.hass, hook_now) if hook_now else "–"},
         )
 
-    async def async_step_webhook(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Adresse für den Shelly anzeigen; mit „Absenden“ wird gespeichert."""
-        if user_input is not None:
-            return self.async_create_entry(data=self._data)
-        return self.async_show_form(
-            step_id="webhook",
-            data_schema=vol.Schema({}),
-            description_placeholders={"webhook_url": webhook_url(self.hass, self._data[CONF_DOORBELL_WEBHOOK_ID])},
-        )
+
+def _notify_webhook(hass, hook_id: str) -> None:
+    """Shelly-Adresse als Benachrichtigung in Home Assistant anzeigen (bleibt, bis sie geschlossen wird)."""
+    url = webhook_url(hass, hook_id)
+    persistent_notification.async_create(
+        hass,
+        f"Adresse für den Shelly (Türklingel):\n\n`{url}`\n\n"
+        "**Shelly Plus/Pro/Gen3/Gen4:** Weboberfläche → Actions → neue Aktion → Auslöser „Input toggled on“ "
+        "bzw. „Button push“ → Webhook/URL aufrufen → Adresse einfügen.\n\n"
+        "**Shelly Gen1:** Settings → I/O URL actions → „Button switched ON url“ bzw. „Button short press url“.\n\n"
+        "Die Adresse funktioniert nur im Heimnetz.",
+        title="Lumora: Türklingel per Webhook",
+        notification_id=f"lumora_webhook_{hook_id}",
+    )
