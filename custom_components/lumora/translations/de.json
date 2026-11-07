@@ -206,7 +206,8 @@
           "doorbell_subtitle": "Untertitel",
           "doorbell_cooldown": "Sperrzeit nach dem Klingeln",
           "doorbell_webhook": "Klingel per Webhook (z. B. Shelly)",
-          "doorbell_webhook_id": "Webhook-ID"
+          "doorbell_webhook_id": "Webhook-ID",
+          "operation": "Betrieb & Zeitplan"
         },
         "data_description": {
           "motion_sensors": "Ein oder mehrere Bewegungs- oder Präsenzmelder in dem Raum, in dem der Rahmen steht. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet.",
@@ -218,6 +219,35 @@
           "doorbell_cooldown": "Weitere Auslösungen in dieser Zeit werden ignoriert (gegen Mehrfachauslösung bei langem Drücken).",
           "doorbell_webhook": "Home Assistant stellt eine Adresse bereit; ruft ein Gerät im Heimnetz sie auf (GET oder POST), klingelt es am Rahmen.",
           "doorbell_webhook_id": "Frei wählbar (Buchstaben, Ziffern, - und _). Um eine bestehende Shelly-Einstellung weiterzuverwenden, hier die bisherige ID eintragen und die alte Automation vorher deaktivieren."
+        },
+        "sections": {
+          "operation": {
+            "name": "Betrieb & Zeitplan",
+            "description": "Wann der Rahmen an ist. Die Werte kommen aus dem Rahmen und werden beim Speichern dorthin übertragen (benötigt Lumora 2.3.5).",
+            "data": {
+              "mode": "Betriebsart",
+              "idle_off_minutes": "Ausschalten ohne Bewegung nach",
+              "idle_mode": "Art des Ausschaltens ohne Bewegung",
+              "wake_at_night": "Nachts bei Bewegung einschalten",
+              "wake_duration_minutes": "Nach Bewegung nachts an lassen für",
+              "night_mode": "Verhalten außerhalb des Zeitplans",
+              "block1_days": "Zeitraum 1: Wochentage",
+              "block1_on": "Zeitraum 1: einschalten um",
+              "block1_off": "Zeitraum 1: ausschalten um",
+              "block2_days": "Zeitraum 2: Wochentage",
+              "block2_on": "Zeitraum 2: einschalten um",
+              "block2_off": "Zeitraum 2: ausschalten um",
+              "block3_days": "Zeitraum 3: Wochentage",
+              "block3_on": "Zeitraum 3: einschalten um",
+              "block3_off": "Zeitraum 3: ausschalten um"
+            },
+            "data_description": {
+              "mode": "Zeitplan: an in den Zeiträumen unten. Immer an: dauerhaft an. Nur bei Bewegung: an bei Bewegung, aus nach der Zeit ohne Bewegung (braucht einen Bewegungsmelder oder die Kamera).",
+              "idle_off_minutes": "Bei „Nur bei Bewegung“ Pflicht; bei „Zeitplan“ schaltet der Rahmen auch innerhalb der Zeiträume ab (0 = nie).",
+              "wake_at_night": "Nur bei „Zeitplan“: Bewegung außerhalb der Zeiträume schaltet für die angegebene Dauer ein.",
+              "block1_days": "Zeiträume ohne Wochentage werden nicht verwendet. Ausschaltzeit vor der Einschaltzeit = über Mitternacht."
+            }
+          }
         }
       }
     },
@@ -225,7 +255,45 @@
       "camera_required": "Bitte eine Kamera wählen.",
       "trigger_required": "Bitte mindestens einen Auslöser wählen oder „Klingel per Webhook“ einschalten.",
       "webhook_in_use": "Diese Webhook-ID wird schon verwendet (z. B. von einer Automation). Die Automation zuerst deaktivieren oder eine andere ID wählen.",
-      "webhook_invalid": "Nur Buchstaben, Ziffern, - und _ erlaubt."
+      "webhook_invalid": "Nur Buchstaben, Ziffern, - und _ erlaubt.",
+      "schedule_empty": "Für die Betriebsart „Zeitplan“ mindestens einen Zeitraum mit Wochentagen angeben.",
+      "schedule_block_invalid": "Ein Zeitraum braucht unterschiedliche Ein- und Ausschaltzeiten.",
+      "idle_required": "Für „Nur bei Bewegung“ eine Zeit ohne Bewegung von mindestens 1 Minute angeben.",
+      "cannot_connect": "Der Rahmen ist nicht erreichbar – Betrieb & Zeitplan wurden nicht übertragen."
+    }
+  },
+  "selector": {
+    "mode": {
+      "options": {
+        "schedule": "Zeitplan",
+        "always": "Immer an",
+        "motion": "Nur bei Bewegung"
+      }
+    },
+    "idle_mode": {
+      "options": {
+        "blackout": "Schwarzer Bildschirm",
+        "monitor-off": "Display aus"
+      }
+    },
+    "night_mode": {
+      "options": {
+        "blackout": "Schwarzer Bildschirm",
+        "monitor-off": "Display aus",
+        "sleep": "Energiesparmodus",
+        "hibernate": "Ruhezustand"
+      }
+    },
+    "weekday": {
+      "options": {
+        "0": "Sonntag",
+        "1": "Montag",
+        "2": "Dienstag",
+        "3": "Mittwoch",
+        "4": "Donnerstag",
+        "5": "Freitag",
+        "6": "Samstag"
+      }
     }
   }
 }

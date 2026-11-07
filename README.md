@@ -35,6 +35,21 @@ Ohne HACS: den Ordner `custom_components/lumora` nach `config/custom_components/
 
 **Aktionen:** `lumora.show_camera` (Kamera einblenden), `lumora.show_image` (Bild einblenden), `lumora.notify` (Nachricht anzeigen), `lumora.dismiss` (Einblendung schließen), `lumora.display_on_for` (Bildschirm vorübergehend einschalten). Ohne Angabe eines Geräts gelten sie für alle Lumora-Rahmen.
 
+## Betrieb & Zeitplan
+
+Im aufklappbaren Bereich **Betrieb & Zeitplan** der Optionen legst du fest, wann der Rahmen an ist – ohne eigene Automation, Lumora setzt es selbst um:
+
+| Feld | Bedeutung |
+|---|---|
+| Betriebsart | **Zeitplan** (an in den Zeiträumen), **Immer an** oder **Nur bei Bewegung** (an bei Bewegung, aus nach der Zeit ohne Bewegung) |
+| Ausschalten ohne Bewegung nach | z. B. 30 min; bei „Nur bei Bewegung“ Pflicht, bei „Zeitplan“ optional (0 = nie) |
+| Art des Ausschaltens | schwarzer Bildschirm oder Display aus |
+| Nachts bei Bewegung einschalten / Dauer | nur bei „Zeitplan“: Bewegung außerhalb der Zeiträume schaltet vorübergehend ein |
+| Verhalten außerhalb des Zeitplans | schwarzer Bildschirm, Display aus, Energiesparmodus, Ruhezustand |
+| Zeitraum 1–3 | Wochentage sowie Ein- und Ausschaltzeit; über Mitternacht möglich |
+
+Die Werte werden beim Öffnen aus dem Rahmen gelesen und beim Speichern dorthin übertragen. Für „Nur bei Bewegung“ braucht es einen gekoppelten Bewegungsmelder (unten) oder die Kamera am Tablet. Der Bereich erscheint ab **Lumora 2.3.5**. Der Schalter „Zeitplan“ am Gerät schaltet den Zeitplan weiterhin direkt ein und aus.
+
 ## Bewegungsmelder im Raum
 
 Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren → Bewegungsmelder im Raum** wählst du einen oder mehrere Bewegungs- oder Präsenzmelder (Binärsensoren) aus dem Raum, in dem der Rahmen steht. Meldet einer Bewegung, wendet Lumora die Regeln aus seinem Reiter *Bewegung* an: nachts bei Bewegung einschalten, wie lange an bleiben, tagsüber ausschalten, wenn längere Zeit keine Bewegung war. Die Kamera am Tablet muss dafür nicht eingeschaltet sein. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet. Die eigenen Entitäten des Rahmens werden nicht angeboten (keine Rückkopplung).
@@ -95,7 +110,7 @@ In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 auf einem Windows-Tabl
 
 ## English
 
-Home Assistant integration for the **Lumora** picture frame app (requires Lumora 2.3.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/lumora-homeassistant` (type *Integration*), restart Home Assistant, then add the **Lumora** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Lumora under *Home Assistant → Control via REST*. Motion: pair one or more motion/presence sensors of the room (requires Lumora 2.3.2+); Lumora then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `lumora.show_camera`, `lumora.show_image`, `lumora.notify`, `lumora.dismiss`, `lumora.display_on_for`.
+Home Assistant integration for the **Lumora** picture frame app (requires Lumora 2.3.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/lumora-homeassistant` (type *Integration*), restart Home Assistant, then add the **Lumora** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Lumora under *Home Assistant → Control via REST*. Operation & schedule: set mode (schedule / always on / motion only), time without motion, night behaviour and up to three periods directly in the options (requires Lumora 2.3.5+). Motion: pair one or more motion/presence sensors of the room (requires Lumora 2.3.2+); Lumora then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `lumora.show_camera`, `lumora.show_image`, `lumora.notify`, `lumora.dismiss`, `lumora.display_on_for`.
 
 Status: the Lumora API endpoints used by the integration are tested; the integration itself has not yet been tested in a running Home Assistant.
 

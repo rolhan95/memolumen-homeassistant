@@ -206,7 +206,8 @@
           "doorbell_subtitle": "Subtitle",
           "doorbell_cooldown": "Lock time after ringing",
           "doorbell_webhook": "Doorbell via webhook (e.g. Shelly)",
-          "doorbell_webhook_id": "Webhook ID"
+          "doorbell_webhook_id": "Webhook ID",
+          "operation": "Operation & schedule"
         },
         "data_description": {
           "motion_sensors": "One or more motion or presence sensors in the room where the frame stands. If a sensor stays \"on\" (presence), motion is reported again every minute.",
@@ -218,6 +219,35 @@
           "doorbell_cooldown": "Further triggers during this time are ignored (prevents repeats on a long press).",
           "doorbell_webhook": "Home Assistant provides an address; when a device in your home network calls it (GET or POST), the doorbell rings on the frame.",
           "doorbell_webhook_id": "Any ID (letters, digits, - and _). To keep an existing Shelly setting, enter the previous ID here and disable the old automation first."
+        },
+        "sections": {
+          "operation": {
+            "name": "Operation & schedule",
+            "description": "When the frame is on. Values are read from the frame and sent to it on save (requires Lumora 2.3.5).",
+            "data": {
+              "mode": "Mode",
+              "idle_off_minutes": "Turn off without motion after",
+              "idle_mode": "How to turn off without motion",
+              "wake_at_night": "Turn on at night on motion",
+              "wake_duration_minutes": "After motion at night stay on for",
+              "night_mode": "Behaviour outside the schedule",
+              "block1_days": "Period 1: weekdays",
+              "block1_on": "Period 1: turn on at",
+              "block1_off": "Period 1: turn off at",
+              "block2_days": "Period 2: weekdays",
+              "block2_on": "Period 2: turn on at",
+              "block2_off": "Period 2: turn off at",
+              "block3_days": "Period 3: weekdays",
+              "block3_on": "Period 3: turn on at",
+              "block3_off": "Period 3: turn off at"
+            },
+            "data_description": {
+              "mode": "Schedule: on during the periods below. Always on: permanently on. Motion only: on with motion, off after the time without motion (needs a motion sensor or the camera).",
+              "idle_off_minutes": "Required for \"Motion only\"; with \"Schedule\" the frame also turns off within the periods (0 = never).",
+              "wake_at_night": "Only with \"Schedule\": motion outside the periods turns the frame on for the given duration.",
+              "block1_days": "Periods without weekdays are not used. Off time before on time = across midnight."
+            }
+          }
         }
       }
     },
@@ -225,7 +255,45 @@
       "camera_required": "Please select a camera.",
       "trigger_required": "Please select at least one trigger or enable \"Doorbell via webhook\".",
       "webhook_in_use": "This webhook ID is already in use (e.g. by an automation). Disable the automation first or choose another ID.",
-      "webhook_invalid": "Only letters, digits, - and _ are allowed."
+      "webhook_invalid": "Only letters, digits, - and _ are allowed.",
+      "schedule_empty": "For mode \"Schedule\" enter at least one period with weekdays.",
+      "schedule_block_invalid": "A period needs different on and off times.",
+      "idle_required": "For \"Motion only\" enter a time without motion of at least 1 minute.",
+      "cannot_connect": "The frame cannot be reached – operation & schedule were not sent."
+    }
+  },
+  "selector": {
+    "mode": {
+      "options": {
+        "schedule": "Schedule",
+        "always": "Always on",
+        "motion": "Motion only"
+      }
+    },
+    "idle_mode": {
+      "options": {
+        "blackout": "Black screen",
+        "monitor-off": "Display off"
+      }
+    },
+    "night_mode": {
+      "options": {
+        "blackout": "Black screen",
+        "monitor-off": "Display off",
+        "sleep": "Sleep",
+        "hibernate": "Hibernate"
+      }
+    },
+    "weekday": {
+      "options": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      }
     }
   }
 }

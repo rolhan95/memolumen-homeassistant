@@ -87,5 +87,12 @@ class LumoraApi:
     async def set_motion_source(self, enabled: bool, sensors: list[str]) -> None:
         await self._request("POST", "/api/ext/motion-source", {"enabled": enabled, "sensors": sensors})
 
+    async def set_schedule_full(self, schedule: dict[str, Any]) -> None:
+        """{on, entries?, nightMode} – Lumora 2.3.5+"""
+        await self._request("POST", "/api/ext/schedule", schedule)
+
+    async def set_motion_settings(self, settings: dict[str, Any]) -> None:
+        await self._request("POST", "/api/ext/motion-settings", settings)
+
     async def dismiss(self) -> None:
         await self._request("POST", "/api/ext/dismiss")

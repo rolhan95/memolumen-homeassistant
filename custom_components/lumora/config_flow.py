@@ -11,11 +11,13 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResu
 from homeassistant.const import CONF_TOKEN, CONF_URL
 from homeassistant.components import persistent_notification, webhook
 from homeassistant.core import callback
+from homeassistant.data_entry_flow import section
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import LumoraApi, LumoraAuthError, LumoraError
+from . import operation
 from .doorbell import webhook_in_use, webhook_url
 from .const import (
     CONF_DOORBELL_CAMERA,
@@ -112,6 +114,10 @@ class LumoraOptionsFlow(OptionsFlow):
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         current = dict(self.config_entry.options)
+        # Betrieb & Zeitplan nur anbieten, wenn der Rahmen erreichbar ist und es unterstützt (Lumora 2.3.5+)
+        runtime = getattr(self.config_entry, "runtime_data", None)
+        state = runtime.coordinator.data if runtime else None
+        has_op = operation.supported(state)
         own_hook = current.get(CONF_DOORBELL_WEBHOOK_ID) if current.get(CONF_DOORBELL_WEBHOOK) else None
         if user_input is not None:
             triggers = user_input.get(CONF_DOORBELL_TRIGGERS) or []
@@ -129,10 +135,24 @@ class LumoraOptionsFlow(OptionsFlow):
                 errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_invalid"
             elif use_hook and webhook_in_use(self.hass, hook_id, own_hook):
                 errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_in_use"
-            else:
+            elif has_op and operation.SECTION in user_input:
+                schedule, motion, err = operation.to_lumora(user_input[operation.SECTION])
+                if err:
+                    errors["base"] = err
+                else:
+                    try:
+                        await runtime.api.set_schedule_full(schedule)
+                        await runtime.api.set_motion_settings(motion)
+                    except LumoraError:
+                        errors["base"] = "cannot_connect"
+            if not errors:
+                # Betrieb & Zeitplan liegt im Rahmen, nicht in den Optionen – beim nächsten Öffnen wird neu gelesen
+                data = {k: v for k, v in user_input.items() if k != operation.SECTION}
                 if use_hook:
                     _notify_webhook(self.hass, hook_id)
-                return self.async_create_entry(data=user_input)
+                if runtime:
+                    await runtime.coordinator.async_request_refresh()
+                return self.async_create_entry(data=data)
 
         suggested = user_input or current
         if not suggested.get(CONF_DOORBELL_WEBHOOK_ID):
@@ -143,6 +163,7 @@ class LumoraOptionsFlow(OptionsFlow):
             vol.Optional(CONF_MOTION_SENSORS): selector.EntitySelector(
                 selector.EntitySelectorConfig(domain="binary_sensor", multiple=True, exclude_entities=own)
             ),
+            **({vol.Required(operation.SECTION): section(operation.schema(), {"collapsed": True})} if has_op else {}),
             vol.Optional(CONF_DOORBELL_TRIGGERS): selector.EntitySelector(
                 selector.EntitySelectorConfig(domain=DOORBELL_TRIGGER_DOMAINS, multiple=True)
             ),
@@ -158,6 +179,8 @@ class LumoraOptionsFlow(OptionsFlow):
                 selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.BOX)
             ),
         })
+        if has_op and not (user_input and operation.SECTION in user_input):
+            suggested = {**suggested, operation.SECTION: operation.defaults(state)}
         hook_now = suggested.get(CONF_DOORBELL_WEBHOOK_ID) if suggested.get(CONF_DOORBELL_WEBHOOK) else None
         return self.async_show_form(
             step_id="init",
