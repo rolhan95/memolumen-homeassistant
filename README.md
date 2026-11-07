@@ -87,9 +87,9 @@ Damit Lumora das Kamerabild abrufen kann, müssen in Lumora unter *Home Assistan
 
 Getestet sind die Lumora-Schnittstellen, die die Integration aufruft (Status, Anzeige, Abwesenheit, Zeitplan, Helligkeit, Befehle, Benachrichtigung, Abweisung eines falschen Tokens) – mit Lumora 2.3.0 auf einem Testrechner.
 
-Die Python-Dateien und Übersetzungen sind syntaktisch geprüft.
+In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 auf einem Windows-Tablet: Installation über HACS (1.2.0, Update auf 1.3.1), Einrichtung mit Adresse und API-Token, Entitäten liefern Werte (Bildschirm, Version, Helligkeit, Sensoren). Der Optionsdialog mit Türklingel-Sensor, Webhook-ID, Kamera und Bewegungsmelder speichert in einem Schritt; die Prüfung „Webhook-ID schon belegt“ greift, solange eine Automation dieselbe ID nutzt. Die Taste „Türklingel testen“ ruft die Kamera-Einblendung in Lumora ohne Fehler auf. Mit Lumora 2.3.0 meldet die Integration erwartungsgemäß, dass der Bewegungsmelder Lumora 2.3.2 braucht.
 
-**Noch nicht getestet:** die Integration selbst in einem laufenden Home Assistant (Einrichtung, Optionen/Türklingel, Entitäten, Aktionen, erneute Anmeldung) und die Installation über HACS.
+**Noch nicht getestet:** echtes Klingeln über Sensor und Shelly-Webhook, Bewegungsmelder mit Lumora ab 2.3.2, erneute Anmeldung bei geändertem Token.
 
 ---
 
