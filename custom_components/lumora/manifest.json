@@ -3,10 +3,11 @@
   "name": "Lumora",
   "codeowners": ["@rolhan95"],
   "config_flow": true,
+  "dependencies": ["webhook"],
   "documentation": "https://github.com/rolhan95/lumora-homeassistant",
   "integration_type": "device",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/rolhan95/lumora-homeassistant/issues",
   "requirements": [],
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -196,14 +196,16 @@
     "step": {
       "init": {
         "title": "Türklingel",
-        "description": "Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Lumora braucht dafür unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken. Felder leeren, um die Türklingel abzuschalten.",
+        "description": "Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Auslösen können Entitäten (z. B. Klingel-Eingang) und/oder ein Webhook, den z. B. ein Shelly aufruft. Lumora braucht unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken.\n\nAktuelle Webhook-Adresse: {webhook_url}",
         "data": {
           "doorbell_triggers": "Auslöser (Türklingel)",
           "doorbell_camera": "Kamera",
           "doorbell_duration": "Anzeigedauer",
           "doorbell_title": "Titel",
           "doorbell_subtitle": "Untertitel",
-          "doorbell_cooldown": "Sperrzeit nach dem Klingeln"
+          "doorbell_cooldown": "Sperrzeit nach dem Klingeln",
+          "doorbell_webhook": "Klingel per Webhook (z. B. Shelly)",
+          "doorbell_webhook_id": "Webhook-ID"
         },
         "data_description": {
           "doorbell_triggers": "Ein oder mehrere Entitäten, z. B. Klingel-Eingang (Binärsensor „an“), Klingel-Ereignis oder Taste. Jedes Auslösen zählt als Klingeln.",
@@ -211,13 +213,21 @@
           "doorbell_duration": "So lange bleibt das Kamerabild auf dem Rahmen.",
           "doorbell_title": "Überschrift der Einblendung, z. B. „Es klingelt an der Haustür“.",
           "doorbell_subtitle": "Zweite Zeile, z. B. der Kameraname.",
-          "doorbell_cooldown": "Weitere Auslösungen in dieser Zeit werden ignoriert (gegen Mehrfachauslösung bei langem Drücken)."
+          "doorbell_cooldown": "Weitere Auslösungen in dieser Zeit werden ignoriert (gegen Mehrfachauslösung bei langem Drücken).",
+          "doorbell_webhook": "Home Assistant stellt eine Adresse bereit; ruft ein Gerät im Heimnetz sie auf (GET oder POST), klingelt es am Rahmen.",
+          "doorbell_webhook_id": "Frei wählbar (Buchstaben, Ziffern, - und _). Um eine bestehende Shelly-Einstellung weiterzuverwenden, hier die bisherige ID eintragen und die alte Automation vorher deaktivieren."
         }
+      },
+      "webhook": {
+        "title": "Adresse für den Shelly",
+        "description": "Diese Adresse im Shelly eintragen:\n\n`{webhook_url}`\n\n**Shelly Plus/Pro/Gen3/Gen4:** Weboberfläche des Shelly → Actions/Aktionen → neue Aktion → Auslöser „Input toggled on“ bzw. „Button push“ → Aktion „Webhook/URL aufrufen“ → Adresse einfügen.\n\n**Shelly Gen1 (z. B. Shelly 1, i3):** Settings → I/O URL actions → „Button switched ON url“ bzw. „Button short press url“ → Adresse einfügen, aktivieren.\n\nDie Adresse funktioniert nur im Heimnetz. Mit „Absenden“ werden die Optionen gespeichert."
       }
     },
     "error": {
       "camera_required": "Bitte eine Kamera wählen.",
-      "trigger_required": "Bitte mindestens einen Auslöser wählen."
+      "trigger_required": "Bitte mindestens einen Auslöser wählen oder „Klingel per Webhook“ einschalten.",
+      "webhook_in_use": "Diese Webhook-ID wird schon verwendet (z. B. von einer Automation). Die Automation zuerst deaktivieren oder eine andere ID wählen.",
+      "webhook_invalid": "Nur Buchstaben, Ziffern, - und _ erlaubt."
     }
   }
 }

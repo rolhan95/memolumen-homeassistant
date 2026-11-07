@@ -54,7 +54,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> bo
     api = LumoraApi(session, entry.data[CONF_URL], entry.data[CONF_TOKEN], entry.data.get(CONF_VERIFY_SSL, False))
     coordinator = LumoraCoordinator(hass, entry, api)
     await coordinator.async_config_entry_first_refresh()
-    doorbell = Doorbell(hass, api, dict(entry.options))
+    doorbell = Doorbell(hass, api, dict(entry.options), entry.title)
     entry.runtime_data = LumoraData(api, coordinator, doorbell)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     unsub = doorbell.start()

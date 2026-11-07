@@ -9,11 +9,13 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.const import CONF_TOKEN, CONF_URL
+from homeassistant.components import webhook
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import LumoraApi, LumoraAuthError, LumoraError
+from .doorbell import webhook_in_use, webhook_url
 from .const import (
     CONF_DOORBELL_CAMERA,
     CONF_DOORBELL_COOLDOWN,
@@ -21,6 +23,8 @@ from .const import (
     CONF_DOORBELL_SUBTITLE,
     CONF_DOORBELL_TITLE,
     CONF_DOORBELL_TRIGGERS,
+    CONF_DOORBELL_WEBHOOK,
+    CONF_DOORBELL_WEBHOOK_ID,
     CONF_VERIFY_SSL,
     DEFAULT_DOORBELL_COOLDOWN,
     DEFAULT_DOORBELL_DURATION,
@@ -101,24 +105,46 @@ class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class LumoraOptionsFlow(OptionsFlow):
-    """Optionen: Türklingel – Auslöser und Kamera für die Einblendung am Rahmen."""
+    """Optionen: Türklingel – Auslöser (Entitäten und/oder Webhook) und Kamera für die Einblendung am Rahmen."""
+
+    def __init__(self) -> None:
+        self._data: dict[str, Any] = {}
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
+        current = dict(self.config_entry.options)
+        own_hook = current.get(CONF_DOORBELL_WEBHOOK_ID) if current.get(CONF_DOORBELL_WEBHOOK) else None
         if user_input is not None:
             triggers = user_input.get(CONF_DOORBELL_TRIGGERS) or []
             camera = user_input.get(CONF_DOORBELL_CAMERA)
-            if triggers and not camera:
+            use_hook = bool(user_input.get(CONF_DOORBELL_WEBHOOK))
+            hook_id = (user_input.get(CONF_DOORBELL_WEBHOOK_ID) or "").strip()
+            if use_hook and not hook_id:
+                hook_id = webhook.async_generate_id()
+            user_input[CONF_DOORBELL_WEBHOOK_ID] = hook_id
+            if (triggers or use_hook) and not camera:
                 errors[CONF_DOORBELL_CAMERA] = "camera_required"
-            elif camera and not triggers:
-                errors[CONF_DOORBELL_TRIGGERS] = "trigger_required"
+            elif camera and not (triggers or use_hook):
+                errors["base"] = "trigger_required"
+            elif use_hook and not all(ch.isalnum() or ch in "-_" for ch in hook_id):
+                errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_invalid"
+            elif use_hook and webhook_in_use(self.hass, hook_id, own_hook):
+                errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_in_use"
             else:
+                self._data = user_input
+                if use_hook:
+                    return await self.async_step_webhook()
                 return self.async_create_entry(data=user_input)
 
+        suggested = user_input or current
+        if not suggested.get(CONF_DOORBELL_WEBHOOK_ID):
+            suggested = {**suggested, CONF_DOORBELL_WEBHOOK_ID: webhook.async_generate_id()}
         schema = vol.Schema({
             vol.Optional(CONF_DOORBELL_TRIGGERS): selector.EntitySelector(
                 selector.EntitySelectorConfig(domain=DOORBELL_TRIGGER_DOMAINS, multiple=True)
             ),
+            vol.Optional(CONF_DOORBELL_WEBHOOK, default=False): selector.BooleanSelector(),
+            vol.Optional(CONF_DOORBELL_WEBHOOK_ID): selector.TextSelector(),
             vol.Optional(CONF_DOORBELL_CAMERA): selector.EntitySelector(selector.EntitySelectorConfig(domain="camera")),
             vol.Optional(CONF_DOORBELL_DURATION, default=DEFAULT_DOORBELL_DURATION): selector.NumberSelector(
                 selector.NumberSelectorConfig(min=5, max=600, step=5, unit_of_measurement="s", mode=selector.NumberSelectorMode.BOX)
@@ -129,8 +155,20 @@ class LumoraOptionsFlow(OptionsFlow):
                 selector.NumberSelectorConfig(min=0, max=300, step=1, unit_of_measurement="s", mode=selector.NumberSelectorMode.BOX)
             ),
         })
+        hook_now = suggested.get(CONF_DOORBELL_WEBHOOK_ID) if suggested.get(CONF_DOORBELL_WEBHOOK) else None
         return self.async_show_form(
             step_id="init",
-            data_schema=self.add_suggested_values_to_schema(schema, user_input or dict(self.config_entry.options)),
+            data_schema=self.add_suggested_values_to_schema(schema, suggested),
             errors=errors,
+            description_placeholders={"webhook_url": webhook_url(self.hass, hook_now) if hook_now else "–"},
+        )
+
+    async def async_step_webhook(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Adresse für den Shelly anzeigen; mit „Absenden“ wird gespeichert."""
+        if user_input is not None:
+            return self.async_create_entry(data=self._data)
+        return self.async_show_form(
+            step_id="webhook",
+            data_schema=vol.Schema({}),
+            description_placeholders={"webhook_url": webhook_url(self.hass, self._data[CONF_DOORBELL_WEBHOOK_ID])},
         )

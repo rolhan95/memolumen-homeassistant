@@ -196,14 +196,16 @@
     "step": {
       "init": {
         "title": "Doorbell",
-        "description": "When the doorbell rings, the frame shows the live image of the selected camera – even at night or in away mode. For this, Lumora needs the Home Assistant address and a long-lived access token under \"Home Assistant → Connection to Home Assistant\". Clear the fields to turn the doorbell off.",
+        "description": "When the doorbell rings, the frame shows the live image of the selected camera – even at night or in away mode. It can be triggered by entities (e.g. a doorbell input) and/or a webhook called e.g. by a Shelly. Lumora needs the Home Assistant address and a long-lived access token under \"Home Assistant → Connection to Home Assistant\".\n\nCurrent webhook address: {webhook_url}",
         "data": {
           "doorbell_triggers": "Trigger (doorbell)",
           "doorbell_camera": "Camera",
           "doorbell_duration": "Display duration",
           "doorbell_title": "Title",
           "doorbell_subtitle": "Subtitle",
-          "doorbell_cooldown": "Lock time after ringing"
+          "doorbell_cooldown": "Lock time after ringing",
+          "doorbell_webhook": "Doorbell via webhook (e.g. Shelly)",
+          "doorbell_webhook_id": "Webhook ID"
         },
         "data_description": {
           "doorbell_triggers": "One or more entities, e.g. a doorbell input (binary sensor \"on\"), a doorbell event or a button. Every trigger counts as a ring.",
@@ -211,13 +213,21 @@
           "doorbell_duration": "How long the camera image stays on the frame.",
           "doorbell_title": "Heading of the overlay, e.g. \"Someone is at the door\".",
           "doorbell_subtitle": "Second line, e.g. the camera name.",
-          "doorbell_cooldown": "Further triggers during this time are ignored (prevents repeats on a long press)."
+          "doorbell_cooldown": "Further triggers during this time are ignored (prevents repeats on a long press).",
+          "doorbell_webhook": "Home Assistant provides an address; when a device in your home network calls it (GET or POST), the doorbell rings on the frame.",
+          "doorbell_webhook_id": "Any ID (letters, digits, - and _). To keep an existing Shelly setting, enter the previous ID here and disable the old automation first."
         }
+      },
+      "webhook": {
+        "title": "Address for the Shelly",
+        "description": "Enter this address in the Shelly:\n\n`{webhook_url}`\n\n**Shelly Plus/Pro/Gen3/Gen4:** Shelly web UI → Actions → new action → trigger \"Input toggled on\" or \"Button push\" → action \"Webhook / call URL\" → paste the address.\n\n**Shelly Gen1 (e.g. Shelly 1, i3):** Settings → I/O URL actions → \"Button switched ON url\" or \"Button short press url\" → paste the address and enable it.\n\nThe address only works in your home network. \"Submit\" saves the options."
       }
     },
     "error": {
       "camera_required": "Please select a camera.",
-      "trigger_required": "Please select at least one trigger."
+      "trigger_required": "Please select at least one trigger or enable \"Doorbell via webhook\".",
+      "webhook_in_use": "This webhook ID is already in use (e.g. by an automation). Disable the automation first or choose another ID.",
+      "webhook_invalid": "Only letters, digits, - and _ are allowed."
     }
   }
 }
