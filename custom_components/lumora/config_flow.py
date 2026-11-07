@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResu
 from homeassistant.const import CONF_TOKEN, CONF_URL
 from homeassistant.components import webhook
 from homeassistant.core import callback
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -25,6 +26,7 @@ from .const import (
     CONF_DOORBELL_TRIGGERS,
     CONF_DOORBELL_WEBHOOK,
     CONF_DOORBELL_WEBHOOK_ID,
+    CONF_MOTION_SENSORS,
     CONF_VERIFY_SSL,
     DEFAULT_DOORBELL_COOLDOWN,
     DEFAULT_DOORBELL_DURATION,
@@ -139,7 +141,12 @@ class LumoraOptionsFlow(OptionsFlow):
         suggested = user_input or current
         if not suggested.get(CONF_DOORBELL_WEBHOOK_ID):
             suggested = {**suggested, CONF_DOORBELL_WEBHOOK_ID: webhook.async_generate_id()}
+        # Eigene Entitäten (z. B. die Kamera-Bewegung des Rahmens) nicht anbieten – das ergäbe eine Rückkopplung
+        own = [e.entity_id for e in er.async_entries_for_config_entry(er.async_get(self.hass), self.config_entry.entry_id)]
         schema = vol.Schema({
+            vol.Optional(CONF_MOTION_SENSORS): selector.EntitySelector(
+                selector.EntitySelectorConfig(domain="binary_sensor", multiple=True, exclude_entities=own)
+            ),
             vol.Optional(CONF_DOORBELL_TRIGGERS): selector.EntitySelector(
                 selector.EntitySelectorConfig(domain=DOORBELL_TRIGGER_DOMAINS, multiple=True)
             ),

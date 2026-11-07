@@ -30,3 +30,6 @@ DEFAULT_DOORBELL_DURATION = 60
 DEFAULT_DOORBELL_TITLE = "Es klingelt"
 DEFAULT_DOORBELL_COOLDOWN = 10
 DOORBELL_TRIGGER_DOMAINS = ["binary_sensor", "event", "input_boolean", "switch", "button", "input_button"]
+
+# Bewegungsmelder im Raum
+CONF_MOTION_SENSORS = "motion_sensors"

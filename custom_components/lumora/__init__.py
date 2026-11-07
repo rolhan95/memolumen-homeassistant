@@ -17,6 +17,7 @@ from homeassistant.helpers.typing import ConfigType
 
 from .api import LumoraApi, LumoraError
 from .const import (
+    CONF_MOTION_SENSORS,
     CONF_VERIFY_SSL,
     DOMAIN,
     SERVICE_DISMISS,
@@ -27,6 +28,7 @@ from .const import (
 )
 from .coordinator import LumoraCoordinator
 from .doorbell import Doorbell
+from .motion import RoomMotion
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.BUTTON, Platform.NOTIFY, Platform.NUMBER, Platform.SENSOR, Platform.SWITCH]
 
@@ -60,7 +62,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> bo
     unsub = doorbell.start()
     if unsub:
         entry.async_on_unload(unsub)
-    # Geänderte Optionen (Türklingel) sofort übernehmen
+    # Bewegungsmelder im Raum koppeln (oder Kopplung aufheben, wenn keiner gewählt ist)
+    unsub_motion = await RoomMotion(hass, api, entry.options.get(CONF_MOTION_SENSORS) or []).async_start()
+    if unsub_motion:
+        entry.async_on_unload(unsub_motion)
+    # Geänderte Optionen sofort übernehmen
     entry.async_on_unload(entry.add_update_listener(_options_updated))
     return True
 
@@ -71,6 +77,18 @@ async def _options_updated(hass: HomeAssistant, entry: LumoraConfigEntry) -> Non
 
 async def async_unload_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> bool:
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> None:
+    """Integration entfernt: Kopplung des Bewegungsmelders in Lumora aufheben (sonst gaelte dort weiter: keine Bewegung)."""
+    if not entry.options.get(CONF_MOTION_SENSORS):
+        return
+    session = async_get_clientsession(hass, verify_ssl=entry.data.get(CONF_VERIFY_SSL, False))
+    api = LumoraApi(session, entry.data[CONF_URL], entry.data[CONF_TOKEN], entry.data.get(CONF_VERIFY_SSL, False))
+    try:
+        await api.set_motion_source(False, [])
+    except LumoraError:
+        pass
 
 
 # ---------- Aktionen ----------

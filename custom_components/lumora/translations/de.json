@@ -195,9 +195,10 @@
   "options": {
     "step": {
       "init": {
-        "title": "Türklingel",
-        "description": "Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Auslösen können Entitäten (z. B. Klingel-Eingang) und/oder ein Webhook, den z. B. ein Shelly aufruft. Lumora braucht unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken.\n\nAktuelle Webhook-Adresse: {webhook_url}",
+        "title": "Bewegungsmelder und Türklingel",
+        "description": "**Bewegungsmelder im Raum:** Meldet ein gewählter Melder Bewegung, gelten in Lumora die Regeln aus „Bewegung“ (nachts einschalten, Dauer, tagsüber ausschalten ohne Bewegung) – auch ohne Kamera am Tablet. Feld leeren, um die Kopplung aufzuheben.\n\n**Türklingel:** Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Auslösen können Entitäten (z. B. Klingel-Eingang) und/oder ein Webhook, den z. B. ein Shelly aufruft. Lumora braucht unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken.\n\nAktuelle Webhook-Adresse: {webhook_url}",
         "data": {
+          "motion_sensors": "Bewegungsmelder im Raum",
           "doorbell_triggers": "Auslöser (Türklingel)",
           "doorbell_camera": "Kamera",
           "doorbell_duration": "Anzeigedauer",
@@ -208,6 +209,7 @@
           "doorbell_webhook_id": "Webhook-ID"
         },
         "data_description": {
+          "motion_sensors": "Ein oder mehrere Bewegungs- oder Präsenzmelder in dem Raum, in dem der Rahmen steht. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet.",
           "doorbell_triggers": "Ein oder mehrere Entitäten, z. B. Klingel-Eingang (Binärsensor „an“), Klingel-Ereignis oder Taste. Jedes Auslösen zählt als Klingeln.",
           "doorbell_camera": "Diese Kamera wird beim Klingeln eingeblendet.",
           "doorbell_duration": "So lange bleibt das Kamerabild auf dem Rahmen.",

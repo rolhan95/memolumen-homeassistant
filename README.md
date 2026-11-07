@@ -35,6 +35,12 @@ Ohne HACS: den Ordner `custom_components/lumora` nach `config/custom_components/
 
 **Aktionen:** `lumora.show_camera` (Kamera einblenden), `lumora.show_image` (Bild einblenden), `lumora.notify` (Nachricht anzeigen), `lumora.dismiss` (Einblendung schließen), `lumora.display_on_for` (Bildschirm vorübergehend einschalten). Ohne Angabe eines Geräts gelten sie für alle Lumora-Rahmen.
 
+## Bewegungsmelder im Raum
+
+Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren → Bewegungsmelder im Raum** wählst du einen oder mehrere Bewegungs- oder Präsenzmelder (Binärsensoren) aus dem Raum, in dem der Rahmen steht. Meldet einer Bewegung, wendet Lumora die Regeln aus seinem Reiter *Bewegung* an: nachts bei Bewegung einschalten, wie lange an bleiben, tagsüber ausschalten, wenn längere Zeit keine Bewegung war. Die Kamera am Tablet muss dafür nicht eingeschaltet sein. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet. Die eigenen Entitäten des Rahmens werden nicht angeboten (keine Rückkopplung).
+
+Benötigt **Lumora 2.3.2** oder neuer. Feld leeren oder Integration entfernen hebt die Kopplung in Lumora wieder auf.
+
 ## Türklingel
 
 Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren** wählst du:
@@ -89,7 +95,7 @@ Die Python-Dateien und Übersetzungen sind syntaktisch geprüft.
 
 ## English
 
-Home Assistant integration for the **Lumora** picture frame app (requires Lumora 2.3.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/lumora-homeassistant` (type *Integration*), restart Home Assistant, then add the **Lumora** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Lumora under *Home Assistant → Control via REST*. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `lumora.show_camera`, `lumora.show_image`, `lumora.notify`, `lumora.dismiss`, `lumora.display_on_for`.
+Home Assistant integration for the **Lumora** picture frame app (requires Lumora 2.3.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/lumora-homeassistant` (type *Integration*), restart Home Assistant, then add the **Lumora** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Lumora under *Home Assistant → Control via REST*. Motion: pair one or more motion/presence sensors of the room (requires Lumora 2.3.2+); Lumora then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `lumora.show_camera`, `lumora.show_image`, `lumora.notify`, `lumora.dismiss`, `lumora.display_on_for`.
 
 Status: the Lumora API endpoints used by the integration are tested; the integration itself has not yet been tested in a running Home Assistant.
 

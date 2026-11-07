@@ -81,5 +81,11 @@ class LumoraApi:
             "POST", "/api/ext/image", {"url": url, "duration": duration, "title": title, "subtitle": subtitle}
         )
 
+    async def motion(self) -> None:
+        await self._request("POST", "/api/ext/motion", {})
+
+    async def set_motion_source(self, enabled: bool, sensors: list[str]) -> None:
+        await self._request("POST", "/api/ext/motion-source", {"enabled": enabled, "sensors": sensors})
+
     async def dismiss(self) -> None:
         await self._request("POST", "/api/ext/dismiss")
