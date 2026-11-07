@@ -16,3 +16,15 @@ SERVICE_SHOW_IMAGE = "show_image"
 SERVICE_NOTIFY = "notify"
 SERVICE_DISMISS = "dismiss"
 SERVICE_DISPLAY_ON_FOR = "display_on_for"
+
+# Türklingel (Optionen der Integration)
+CONF_DOORBELL_TRIGGERS = "doorbell_triggers"
+CONF_DOORBELL_CAMERA = "doorbell_camera"
+CONF_DOORBELL_DURATION = "doorbell_duration"
+CONF_DOORBELL_TITLE = "doorbell_title"
+CONF_DOORBELL_SUBTITLE = "doorbell_subtitle"
+CONF_DOORBELL_COOLDOWN = "doorbell_cooldown"
+DEFAULT_DOORBELL_DURATION = 60
+DEFAULT_DOORBELL_TITLE = "Es klingelt"
+DEFAULT_DOORBELL_COOLDOWN = 10
+DOORBELL_TRIGGER_DOMAINS = ["binary_sensor", "event", "input_boolean", "switch", "button", "input_button"]

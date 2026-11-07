@@ -13,7 +13,9 @@
       "reauth_confirm": {
         "title": "Renew API token",
         "description": "The API token was changed in Lumora. Please enter the current token from \"Home Assistant → Control via REST\".",
-        "data": { "token": "API token" }
+        "data": {
+          "token": "API token"
+        }
       }
     },
     "error": {
@@ -27,73 +29,195 @@
   },
   "entity": {
     "switch": {
-      "display": { "name": "Screen" },
-      "away": { "name": "Away mode" },
-      "schedule": { "name": "Schedule" }
+      "display": {
+        "name": "Screen"
+      },
+      "away": {
+        "name": "Away mode"
+      },
+      "schedule": {
+        "name": "Schedule"
+      }
     },
-    "number": { "brightness": { "name": "Brightness" } },
+    "number": {
+      "brightness": {
+        "name": "Brightness"
+      }
+    },
     "sensor": {
-      "lux": { "name": "Ambient light" },
-      "photos": { "name": "Photos" },
-      "next_on": { "name": "Next switch-on" },
-      "version": { "name": "Version" }
+      "lux": {
+        "name": "Ambient light"
+      },
+      "photos": {
+        "name": "Photos"
+      },
+      "next_on": {
+        "name": "Next switch-on"
+      },
+      "version": {
+        "name": "Version"
+      }
     },
-    "binary_sensor": { "motion": { "name": "Motion" } },
+    "binary_sensor": {
+      "motion": {
+        "name": "Motion"
+      }
+    },
     "button": {
-      "next": { "name": "Next photo" },
-      "prev": { "name": "Previous photo" },
-      "pause": { "name": "Pause slideshow" },
-      "resume": { "name": "Resume slideshow" },
-      "dismiss": { "name": "Close overlay" },
-      "restart": { "name": "Restart app" }
+      "next": {
+        "name": "Next photo"
+      },
+      "prev": {
+        "name": "Previous photo"
+      },
+      "pause": {
+        "name": "Pause slideshow"
+      },
+      "resume": {
+        "name": "Resume slideshow"
+      },
+      "dismiss": {
+        "name": "Close overlay"
+      },
+      "restart": {
+        "name": "Restart app"
+      },
+      "doorbell_test": {
+        "name": "Test doorbell"
+      }
     },
-    "notify": { "message": { "name": "Message" } }
+    "notify": {
+      "message": {
+        "name": "Message"
+      }
+    }
   },
   "services": {
     "show_camera": {
       "name": "Show camera",
       "description": "Shows the live image of a Home Assistant camera on the picture frame (e.g. door camera when the bell rings). Lumora needs the Home Assistant address and a token in its settings.",
       "fields": {
-        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
-        "camera": { "name": "Camera", "description": "Camera entity." },
-        "duration": { "name": "Duration", "description": "How long the image stays on screen." },
-        "title": { "name": "Title", "description": "Heading, e.g. \"Someone is at the door\"." },
-        "subtitle": { "name": "Subtitle", "description": "Second line." }
+        "device_id": {
+          "name": "Picture frame",
+          "description": "Empty = all Lumora picture frames."
+        },
+        "camera": {
+          "name": "Camera",
+          "description": "Camera entity."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "How long the image stays on screen."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Heading, e.g. \"Someone is at the door\"."
+        },
+        "subtitle": {
+          "name": "Subtitle",
+          "description": "Second line."
+        }
       }
     },
     "show_image": {
       "name": "Show image",
       "description": "Shows an image by address (http/https or a Home Assistant path like /api/camera_proxy/…).",
       "fields": {
-        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
-        "url": { "name": "Image address", "description": "Address of the image." },
-        "duration": { "name": "Duration", "description": "How long the image stays on screen." },
-        "title": { "name": "Title", "description": "Heading." },
-        "subtitle": { "name": "Subtitle", "description": "Second line." }
+        "device_id": {
+          "name": "Picture frame",
+          "description": "Empty = all Lumora picture frames."
+        },
+        "url": {
+          "name": "Image address",
+          "description": "Address of the image."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "How long the image stays on screen."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Heading."
+        },
+        "subtitle": {
+          "name": "Subtitle",
+          "description": "Second line."
+        }
       }
     },
     "notify": {
       "name": "Show message",
       "description": "Shows a message as a banner at the top of the picture frame.",
       "fields": {
-        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
-        "message": { "name": "Message", "description": "Message text." },
-        "title": { "name": "Title", "description": "Heading." },
-        "duration": { "name": "Duration", "description": "How long the message stays visible." }
+        "device_id": {
+          "name": "Picture frame",
+          "description": "Empty = all Lumora picture frames."
+        },
+        "message": {
+          "name": "Message",
+          "description": "Message text."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Heading."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "How long the message stays visible."
+        }
       }
     },
     "dismiss": {
       "name": "Close overlay",
       "description": "Closes a camera or image overlay.",
-      "fields": { "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." } }
+      "fields": {
+        "device_id": {
+          "name": "Picture frame",
+          "description": "Empty = all Lumora picture frames."
+        }
+      }
     },
     "display_on_for": {
       "name": "Turn screen on temporarily",
       "description": "Turns the screen on for some minutes, even outside the operating hours.",
       "fields": {
-        "device_id": { "name": "Picture frame", "description": "Empty = all Lumora picture frames." },
-        "minutes": { "name": "Minutes", "description": "Afterwards the schedule applies again." }
+        "device_id": {
+          "name": "Picture frame",
+          "description": "Empty = all Lumora picture frames."
+        },
+        "minutes": {
+          "name": "Minutes",
+          "description": "Afterwards the schedule applies again."
+        }
       }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Doorbell",
+        "description": "When the doorbell rings, the frame shows the live image of the selected camera – even at night or in away mode. For this, Lumora needs the Home Assistant address and a long-lived access token under \"Home Assistant → Connection to Home Assistant\". Clear the fields to turn the doorbell off.",
+        "data": {
+          "doorbell_triggers": "Trigger (doorbell)",
+          "doorbell_camera": "Camera",
+          "doorbell_duration": "Display duration",
+          "doorbell_title": "Title",
+          "doorbell_subtitle": "Subtitle",
+          "doorbell_cooldown": "Lock time after ringing"
+        },
+        "data_description": {
+          "doorbell_triggers": "One or more entities, e.g. a doorbell input (binary sensor \"on\"), a doorbell event or a button. Every trigger counts as a ring.",
+          "doorbell_camera": "This camera is shown when the doorbell rings.",
+          "doorbell_duration": "How long the camera image stays on the frame.",
+          "doorbell_title": "Heading of the overlay, e.g. \"Someone is at the door\".",
+          "doorbell_subtitle": "Second line, e.g. the camera name.",
+          "doorbell_cooldown": "Further triggers during this time are ignored (prevents repeats on a long press)."
+        }
+      }
+    },
+    "error": {
+      "camera_required": "Please select a camera.",
+      "trigger_required": "Please select at least one trigger."
     }
   }
 }

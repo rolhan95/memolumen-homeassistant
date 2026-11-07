@@ -26,6 +26,7 @@ from .const import (
     SERVICE_SHOW_IMAGE,
 )
 from .coordinator import LumoraCoordinator
+from .doorbell import Doorbell
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.BUTTON, Platform.NOTIFY, Platform.NUMBER, Platform.SENSOR, Platform.SWITCH]
 
@@ -36,6 +37,7 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 class LumoraData:
     api: LumoraApi
     coordinator: LumoraCoordinator
+    doorbell: Doorbell
 
 
 type LumoraConfigEntry = ConfigEntry[LumoraData]
@@ -52,9 +54,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> bo
     api = LumoraApi(session, entry.data[CONF_URL], entry.data[CONF_TOKEN], entry.data.get(CONF_VERIFY_SSL, False))
     coordinator = LumoraCoordinator(hass, entry, api)
     await coordinator.async_config_entry_first_refresh()
-    entry.runtime_data = LumoraData(api, coordinator)
+    doorbell = Doorbell(hass, api, dict(entry.options))
+    entry.runtime_data = LumoraData(api, coordinator, doorbell)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    unsub = doorbell.start()
+    if unsub:
+        entry.async_on_unload(unsub)
+    # Geänderte Optionen (Türklingel) sofort übernehmen
+    entry.async_on_unload(entry.add_update_listener(_options_updated))
     return True
+
+
+async def _options_updated(hass: HomeAssistant, entry: LumoraConfigEntry) -> None:
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: LumoraConfigEntry) -> bool:

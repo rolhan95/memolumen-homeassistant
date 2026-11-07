@@ -23,7 +23,10 @@ BUTTONS = (
 
 async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(LumoraButton(coordinator, d, cmd) for d, cmd in BUTTONS)
+    entities: list[ButtonEntity] = [LumoraButton(coordinator, d, cmd) for d, cmd in BUTTONS]
+    if entry.runtime_data.doorbell.configured:
+        entities.append(LumoraDoorbellTest(coordinator, entry.runtime_data.doorbell))
+    async_add_entities(entities)
 
 
 class LumoraButton(LumoraEntity, ButtonEntity):
@@ -37,3 +40,16 @@ class LumoraButton(LumoraEntity, ButtonEntity):
             await self.coordinator.api.dismiss()
         else:
             await self.coordinator.api.command(self._command)
+
+
+class LumoraDoorbellTest(LumoraEntity, ButtonEntity):
+    """Blendet die Türklingel-Kamera probehalber ein."""
+
+    _attr_icon = "mdi:doorbell-video"
+
+    def __init__(self, coordinator, doorbell) -> None:
+        super().__init__(coordinator, "doorbell_test")
+        self._doorbell = doorbell
+
+    async def async_press(self) -> None:
+        await self._doorbell.ring("Test")
