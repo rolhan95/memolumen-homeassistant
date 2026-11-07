@@ -45,7 +45,8 @@ class LumoraApi:
         except LumoraError:
             raise
         except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
-            raise LumoraError(f"Lumora nicht erreichbar: {err}") from err
+            detail = "Zeitüberschreitung (Tablet aus, im Standby oder Adresse falsch?)" if isinstance(err, asyncio.TimeoutError) else (str(err) or type(err).__name__)
+            raise LumoraError(f"Lumora nicht erreichbar: {detail}") from err
 
     async def state(self) -> dict[str, Any]:
         return await self._request("GET", "/api/ext/state")
