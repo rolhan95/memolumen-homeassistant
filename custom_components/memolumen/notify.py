@@ -6,15 +6,15 @@ from homeassistant.components.notify import NotifyEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import LumoraConfigEntry
-from .entity import LumoraEntity
+from . import MemolumenConfigEntry
+from .entity import MemolumenEntity
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
-    async_add_entities([LumoraNotify(entry.runtime_data.coordinator, "message")])
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+    async_add_entities([MemolumenNotify(entry.runtime_data.coordinator, "message")])
 
 
-class LumoraNotify(LumoraEntity, NotifyEntity):
+class MemolumenNotify(MemolumenEntity, NotifyEntity):
     _attr_icon = "mdi:message-badge"
 
     async def async_send_message(self, message: str, title: str | None = None) -> None:

@@ -12,7 +12,7 @@ from homeassistant.core import Event, EventStateChangedData, HomeAssistant, call
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.network import NoURLAvailableError, get_url
 
-from .api import LumoraApi, LumoraError
+from .api import MemolumenApi, MemolumenError
 from .const import (
     CONF_DOORBELL_CAMERA,
     CONF_DOORBELL_COOLDOWN,
@@ -65,9 +65,9 @@ def webhook_in_use(hass: HomeAssistant, webhook_id: str, own_id: str | None) -> 
 
 
 class Doorbell:
-    """Beobachtet die Auslöser eines Lumora-Rahmens."""
+    """Beobachtet die Auslöser eines Memolumen-Rahmens."""
 
-    def __init__(self, hass: HomeAssistant, api: LumoraApi, options: dict, name: str = "Lumora") -> None:
+    def __init__(self, hass: HomeAssistant, api: MemolumenApi, options: dict, name: str = "Memolumen") -> None:
         self.hass = hass
         self.api = api
         self.name = name
@@ -91,7 +91,7 @@ class Doorbell:
             return None
         unsubs = []
         if self.triggers:
-            _LOGGER.debug("Lumora-Türklingel: %s → %s", self.triggers, self.camera)
+            _LOGGER.debug("Memolumen-Türklingel: %s → %s", self.triggers, self.camera)
             unsubs.append(async_track_state_change_event(self.hass, self.triggers, self._changed))
         if self.webhook_id:
             try:
@@ -101,10 +101,10 @@ class Doorbell:
                 )
                 hook_id = self.webhook_id
                 unsubs.append(lambda: webhook.async_unregister(self.hass, hook_id))
-                _LOGGER.debug("Lumora-Türklingel: Webhook %s aktiv", hook_id)
+                _LOGGER.debug("Memolumen-Türklingel: Webhook %s aktiv", hook_id)
             except ValueError:
                 _LOGGER.error(
-                    "Lumora: Webhook-ID %s ist schon belegt (z. B. von einer Automation) – Türklingel per Webhook inaktiv",
+                    "Memolumen: Webhook-ID %s ist schon belegt (z. B. von einer Automation) – Türklingel per Webhook inaktiv",
                     self.webhook_id,
                 )
         if not unsubs:
@@ -129,7 +129,7 @@ class Doorbell:
     def _trigger(self, source: str) -> None:
         now = time.monotonic()
         if now - self._last < self.cooldown:
-            _LOGGER.debug("Lumora-Türklingel: %s innerhalb der Sperrzeit ignoriert", source)
+            _LOGGER.debug("Memolumen-Türklingel: %s innerhalb der Sperrzeit ignoriert", source)
             return
         self._last = now
         self.hass.async_create_task(self.ring(source))
@@ -141,6 +141,6 @@ class Doorbell:
         self.last_ring = time.time()
         try:
             await self.api.show_camera(self.camera, self.duration, self.title, self.subtitle)
-            _LOGGER.info("Lumora: Türklingel (%s) – %s eingeblendet", source, self.camera)
-        except LumoraError as err:
-            _LOGGER.warning("Lumora: Kamera konnte nicht eingeblendet werden: %s", err)
+            _LOGGER.info("Memolumen: Türklingel (%s) – %s eingeblendet", source, self.camera)
+        except MemolumenError as err:
+            _LOGGER.warning("Memolumen: Kamera konnte nicht eingeblendet werden: %s", err)

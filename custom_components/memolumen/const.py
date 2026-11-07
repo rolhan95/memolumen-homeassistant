@@ -1,8 +1,8 @@
-"""Konstanten der Lumora-Integration."""
+"""Konstanten der Memolumen-Integration."""
 
 from datetime import timedelta
 
-DOMAIN = "lumora"
+DOMAIN = "memolumen"
 
 CONF_VERIFY_SSL = "verify_ssl"
 

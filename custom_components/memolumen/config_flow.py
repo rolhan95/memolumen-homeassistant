@@ -16,7 +16,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import LumoraApi, LumoraAuthError, LumoraError
+from .api import MemolumenApi, MemolumenAuthError, MemolumenError
 from . import operation
 from .doorbell import webhook_in_use, webhook_url
 from .const import (
@@ -47,17 +47,17 @@ def _normalize_url(url: str) -> str:
     return url
 
 
-class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
+class MemolumenConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     @staticmethod
     @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
-        return LumoraOptionsFlow()
+        return MemolumenOptionsFlow()
 
     async def _validate(self, data: dict[str, Any]) -> dict[str, Any]:
         session = async_get_clientsession(self.hass, verify_ssl=data[CONF_VERIFY_SSL])
-        api = LumoraApi(session, data[CONF_URL], data[CONF_TOKEN], data[CONF_VERIFY_SSL])
+        api = MemolumenApi(session, data[CONF_URL], data[CONF_TOKEN], data[CONF_VERIFY_SSL])
         return await api.state()
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
@@ -70,15 +70,15 @@ class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
             }
             try:
                 state = await self._validate(data)
-            except LumoraAuthError:
+            except MemolumenAuthError:
                 errors["base"] = "invalid_auth"
-            except LumoraError:
+            except MemolumenError:
                 errors["base"] = "cannot_connect"
             else:
                 device = state.get("device") or {}
                 await self.async_set_unique_id(device.get("id") or data[CONF_URL])
                 self._abort_if_unique_id_configured(updates=data)
-                return self.async_create_entry(title=f"Lumora {device.get('name') or ''}".strip(), data=data)
+                return self.async_create_entry(title=f"Memolumen {device.get('name') or ''}".strip(), data=data)
 
         schema = vol.Schema({
             vol.Required(CONF_URL, default=(user_input or {}).get(CONF_URL, "https://")): str,
@@ -97,9 +97,9 @@ class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
             data = {**entry.data, CONF_TOKEN: user_input[CONF_TOKEN].strip()}
             try:
                 await self._validate(data)
-            except LumoraAuthError:
+            except MemolumenAuthError:
                 errors["base"] = "invalid_auth"
-            except LumoraError:
+            except MemolumenError:
                 errors["base"] = "cannot_connect"
             else:
                 return self.async_update_reload_and_abort(entry, data=data)
@@ -108,13 +108,13 @@ class LumoraConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-class LumoraOptionsFlow(OptionsFlow):
+class MemolumenOptionsFlow(OptionsFlow):
     """Optionen: Türklingel – Auslöser (Entitäten und/oder Webhook) und Kamera für die Einblendung am Rahmen."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         current = dict(self.config_entry.options)
-        # Betrieb & Zeitplan nur anbieten, wenn der Rahmen erreichbar ist und es unterstützt (Lumora 2.3.5+)
+        # Betrieb & Zeitplan nur anbieten, wenn der Rahmen erreichbar ist und es unterstützt (Memolumen 3.0.0+)
         runtime = getattr(self.config_entry, "runtime_data", None)
         state = runtime.coordinator.data if runtime else None
         has_op = operation.supported(state)
@@ -136,14 +136,14 @@ class LumoraOptionsFlow(OptionsFlow):
             elif use_hook and webhook_in_use(self.hass, hook_id, own_hook):
                 errors[CONF_DOORBELL_WEBHOOK_ID] = "webhook_in_use"
             elif has_op and operation.SECTION in user_input:
-                schedule, motion, err = operation.to_lumora(user_input[operation.SECTION])
+                schedule, motion, err = operation.to_memolumen(user_input[operation.SECTION])
                 if err:
                     errors["base"] = err
                 else:
                     try:
                         await runtime.api.set_schedule_full(schedule)
                         await runtime.api.set_motion_settings(motion)
-                    except LumoraError:
+                    except MemolumenError:
                         errors["base"] = "cannot_connect"
             if not errors:
                 # Betrieb & Zeitplan liegt im Rahmen, nicht in den Optionen – beim nächsten Öffnen wird neu gelesen
@@ -200,6 +200,6 @@ def _notify_webhook(hass, hook_id: str) -> None:
         "bzw. „Button push“ → Webhook/URL aufrufen → Adresse einfügen.\n\n"
         "**Shelly Gen1:** Settings → I/O URL actions → „Button switched ON url“ bzw. „Button short press url“.\n\n"
         "Die Adresse funktioniert nur im Heimnetz.",
-        title="Lumora: Türklingel per Webhook",
-        notification_id=f"lumora_webhook_{hook_id}",
+        title="Memolumen: Türklingel per Webhook",
+        notification_id=f"memolumen_webhook_{hook_id}",
     )

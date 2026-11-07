@@ -7,15 +7,15 @@ from homeassistant.const import PERCENTAGE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import LumoraConfigEntry
-from .entity import LumoraEntity
+from . import MemolumenConfigEntry
+from .entity import MemolumenEntity
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
-    async_add_entities([LumoraBrightness(entry.runtime_data.coordinator, "brightness")])
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+    async_add_entities([MemolumenBrightness(entry.runtime_data.coordinator, "brightness")])
 
 
-class LumoraBrightness(LumoraEntity, NumberEntity):
+class MemolumenBrightness(MemolumenEntity, NumberEntity):
     _attr_icon = "mdi:brightness-6"
     _attr_native_min_value = 0
     _attr_native_max_value = 100

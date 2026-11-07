@@ -1,26 +1,30 @@
-# Lumora für Home Assistant
+# Memolumen für Home Assistant
 
-Integration für [Home Assistant](https://www.home-assistant.io/), die einen **Lumora-Bilderrahmen** (digitaler Bilderrahmen für Windows-Tablets) direkt einbindet – ohne MQTT-Broker. Installation über [HACS](https://hacs.xyz/).
+Integration für [Home Assistant](https://www.home-assistant.io/), die einen **Memolumen-Bilderrahmen** (digitaler Bilderrahmen für Windows-Tablets) direkt einbindet – ohne MQTT-Broker. Installation über [HACS](https://hacs.xyz/).
 
 *English summary below.*
 
 ## Voraussetzungen
 
-- Lumora **2.3.0 oder neuer** auf dem Tablet
+- Memolumen **3.0.0 oder neuer** auf dem Tablet
 - Home Assistant **2025.3** oder neuer, HACS
-- Adresse der Lumora-Weboberfläche (z. B. `https://192.168.1.50:8443`) und der **API-Token** aus Lumora (*Home Assistant → Steuerung per REST*)
+- Adresse der Memolumen-Weboberfläche (z. B. `https://192.168.1.50:8443`) und der **API-Token** aus Memolumen (*Home Assistant → Steuerung per REST*)
 
 ## Installation
 
 1. In Home Assistant **HACS → ⋮ → Benutzerdefinierte Repositories** öffnen.
-2. `https://github.com/rolhan95/lumora-homeassistant` eintragen, Typ **Integration**, hinzufügen.
-3. **Lumora** in HACS suchen, herunterladen und Home Assistant neu starten.
-4. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Lumora**.
-5. Adresse und API-Token eintragen. „Zertifikat prüfen“ ausgeschaltet lassen, solange Lumora seine eigene lokale Zertifizierungsstelle verwendet.
+2. `https://github.com/rolhan95/memolumen-homeassistant` eintragen, Typ **Integration**, hinzufügen.
+3. **Memolumen** in HACS suchen, herunterladen und Home Assistant neu starten.
+4. **Einstellungen → Geräte & Dienste → Integration hinzufügen → Memolumen**.
+5. Adresse und API-Token eintragen. „Zertifikat prüfen“ ausgeschaltet lassen, solange Memolumen seine eigene lokale Zertifizierungsstelle verwendet.
 
-Ohne HACS: den Ordner `custom_components/lumora` nach `config/custom_components/` in Home Assistant kopieren und Home Assistant neu starten.
+Ohne HACS: den Ordner `custom_components/memolumen` nach `config/custom_components/` in Home Assistant kopieren und Home Assistant neu starten.
 
-> MQTT in Lumora und diese Integration nicht gleichzeitig nutzen – sonst erscheint der Rahmen doppelt.
+> MQTT in Memolumen und diese Integration nicht gleichzeitig nutzen – sonst erscheint der Rahmen doppelt.
+
+## Umstieg von der Lumora-Integration
+
+Bis Version 1.4.0 hieß diese Integration „Lumora“ (Repository `rolhan95/lumora-homeassistant`). Weil sich die Domain geändert hat, ist es eine neue Integration: in HACS dieses Repository hinzufügen, **Memolumen** installieren und einrichten, danach die alte Lumora-Integration entfernen. Entitäten heißen danach `…memolumen…`; Automationen bitte auf die neuen Entitäten und die Aktionen `memolumen.*` umstellen.
 
 ## Funktionen
 
@@ -29,15 +33,15 @@ Ohne HACS: den Ordner `custom_components/lumora` nach `config/custom_components/
 | Schalter | Bildschirm, Abwesenheitsmodus, Zeitplan |
 | Zahl | Helligkeit (0–100 %) |
 | Sensoren | Umgebungslicht, Anzahl Fotos, nächstes Einschalten, Version |
-| Bewegung | Bewegungsmelder der Kamera (wenn in Lumora aktiviert) |
+| Bewegung | Bewegungsmelder der Kamera (wenn in Memolumen aktiviert) |
 | Tasten | nächstes/vorheriges Foto, Diashow anhalten/fortsetzen, Einblendung schließen, App neu starten |
 | Benachrichtigung | Nachricht als Banner auf dem Rahmen (`notify.send_message`) |
 
-**Aktionen:** `lumora.show_camera` (Kamera einblenden), `lumora.show_image` (Bild einblenden), `lumora.notify` (Nachricht anzeigen), `lumora.dismiss` (Einblendung schließen), `lumora.display_on_for` (Bildschirm vorübergehend einschalten). Ohne Angabe eines Geräts gelten sie für alle Lumora-Rahmen.
+**Aktionen:** `memolumen.show_camera` (Kamera einblenden), `memolumen.show_image` (Bild einblenden), `memolumen.notify` (Nachricht anzeigen), `memolumen.dismiss` (Einblendung schließen), `memolumen.display_on_for` (Bildschirm vorübergehend einschalten). Ohne Angabe eines Geräts gelten sie für alle Memolumen-Rahmen.
 
 ## Betrieb & Zeitplan
 
-Im aufklappbaren Bereich **Betrieb & Zeitplan** der Optionen legst du fest, wann der Rahmen an ist – ohne eigene Automation, Lumora setzt es selbst um:
+Im aufklappbaren Bereich **Betrieb & Zeitplan** der Optionen legst du fest, wann der Rahmen an ist – ohne eigene Automation, Memolumen setzt es selbst um:
 
 | Feld | Bedeutung |
 |---|---|
@@ -48,17 +52,17 @@ Im aufklappbaren Bereich **Betrieb & Zeitplan** der Optionen legst du fest, wann
 | Verhalten außerhalb des Zeitplans | schwarzer Bildschirm, Display aus, Energiesparmodus, Ruhezustand |
 | Zeitraum 1–3 | Wochentage sowie Ein- und Ausschaltzeit; über Mitternacht möglich |
 
-Die Werte werden beim Öffnen aus dem Rahmen gelesen und beim Speichern dorthin übertragen. Für „Nur bei Bewegung“ braucht es einen gekoppelten Bewegungsmelder (unten) oder die Kamera am Tablet. Der Bereich erscheint ab **Lumora 2.3.5**. Der Schalter „Zeitplan“ am Gerät schaltet den Zeitplan weiterhin direkt ein und aus.
+Die Werte werden beim Öffnen aus dem Rahmen gelesen und beim Speichern dorthin übertragen. Für „Nur bei Bewegung“ braucht es einen gekoppelten Bewegungsmelder (unten) oder die Kamera am Tablet. Der Bereich erscheint ab **Memolumen 3.0.0**. Der Schalter „Zeitplan“ am Gerät schaltet den Zeitplan weiterhin direkt ein und aus.
 
 ## Bewegungsmelder im Raum
 
-Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren → Bewegungsmelder im Raum** wählst du einen oder mehrere Bewegungs- oder Präsenzmelder (Binärsensoren) aus dem Raum, in dem der Rahmen steht. Meldet einer Bewegung, wendet Lumora die Regeln aus seinem Reiter *Bewegung* an: nachts bei Bewegung einschalten, wie lange an bleiben, tagsüber ausschalten, wenn längere Zeit keine Bewegung war. Die Kamera am Tablet muss dafür nicht eingeschaltet sein. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet. Die eigenen Entitäten des Rahmens werden nicht angeboten (keine Rückkopplung).
+Unter **Einstellungen → Geräte & Dienste → Memolumen → Konfigurieren → Bewegungsmelder im Raum** wählst du einen oder mehrere Bewegungs- oder Präsenzmelder (Binärsensoren) aus dem Raum, in dem der Rahmen steht. Meldet einer Bewegung, wendet Memolumen die Regeln aus seinem Reiter *Bewegung* an: nachts bei Bewegung einschalten, wie lange an bleiben, tagsüber ausschalten, wenn längere Zeit keine Bewegung war. Die Kamera am Tablet muss dafür nicht eingeschaltet sein. Bleibt ein Melder auf „an“ (Präsenz), wird die Bewegung jede Minute erneut gemeldet. Die eigenen Entitäten des Rahmens werden nicht angeboten (keine Rückkopplung).
 
-Benötigt **Lumora 2.3.2** oder neuer. Feld leeren oder Integration entfernen hebt die Kopplung in Lumora wieder auf.
+Benötigt **Memolumen 3.0.0** oder neuer. Feld leeren oder Integration entfernen hebt die Kopplung in Memolumen wieder auf.
 
 ## Türklingel
 
-Unter **Einstellungen → Geräte & Dienste → Lumora → Konfigurieren** wählst du:
+Unter **Einstellungen → Geräte & Dienste → Memolumen → Konfigurieren** wählst du:
 
 | Feld | Bedeutung |
 |---|---|
@@ -87,32 +91,34 @@ Danach erscheint am Gerät die Taste **Türklingel testen**. Wechsel von „nich
 Beispiel – Türkamera beim Klingeln per Automation:
 
 ```yaml
-action: lumora.show_camera
+action: memolumen.show_camera
 data:
   camera: camera.haustuer
   duration: 45
   title: Es klingelt
 ```
 
-Damit Lumora das Kamerabild abrufen kann, müssen in Lumora unter *Home Assistant → Verbindung zu Home Assistant* die Adresse von Home Assistant und ein langlebiges Zugriffstoken eingetragen sein.
+Damit Memolumen das Kamerabild abrufen kann, müssen in Memolumen unter *Home Assistant → Verbindung zu Home Assistant* die Adresse von Home Assistant und ein langlebiges Zugriffstoken eingetragen sein.
 
-Ändert sich der API-Token in Lumora, fordert Home Assistant zur erneuten Anmeldung auf.
+Ändert sich der API-Token in Memolumen, fordert Home Assistant zur erneuten Anmeldung auf.
 
 ## Teststand
 
-Getestet sind die Lumora-Schnittstellen, die die Integration aufruft (Status, Anzeige, Abwesenheit, Zeitplan, Helligkeit, Befehle, Benachrichtigung, Abweisung eines falschen Tokens) – mit Lumora 2.3.0 auf einem Testrechner.
+**2.0.0 (neuer Name):** Die Integration heißt jetzt „Memolumen“ (Domain `memolumen`, vorher `lumora`); die Schnittstelle zum Rahmen ist unverändert. Geprüft ist nur, dass alle Python-Dateien fehlerfrei geparst werden; in Home Assistant ist 2.0.0 noch nicht getestet. Die folgenden Angaben stammen aus den Tests unter dem früheren Namen.
 
-In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 auf einem Windows-Tablet: Installation über HACS (1.2.0, Update auf 1.3.1), Einrichtung mit Adresse und API-Token, Entitäten liefern Werte (Bildschirm, Version, Helligkeit, Sensoren). Der Optionsdialog mit Türklingel-Sensor, Webhook-ID, Kamera und Bewegungsmelder speichert in einem Schritt; die Prüfung „Webhook-ID schon belegt“ greift, solange eine Automation dieselbe ID nutzt. Die Taste „Türklingel testen“ blendet das Live-Bild der Eingangskamera auf dem Rahmen ein. Mit Lumora 2.3.0 meldet die Integration erwartungsgemäß, dass der Bewegungsmelder Lumora 2.3.2 braucht.
+Getestet sind die Memolumen-Schnittstellen, die die Integration aufruft (Status, Anzeige, Abwesenheit, Zeitplan, Helligkeit, Befehle, Benachrichtigung, Abweisung eines falschen Tokens) – mit Lumora 2.3.0 (heute Memolumen) auf einem Testrechner.
 
-**Noch nicht getestet:** echtes Klingeln über Sensor und Shelly-Webhook, Bewegungsmelder mit Lumora ab 2.3.2, erneute Anmeldung bei geändertem Token.
+In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 (heute Memolumen) auf einem Windows-Tablet: Installation über HACS (1.2.0, Update auf 1.3.1), Einrichtung mit Adresse und API-Token, Entitäten liefern Werte (Bildschirm, Version, Helligkeit, Sensoren). Der Optionsdialog mit Türklingel-Sensor, Webhook-ID, Kamera und Bewegungsmelder speichert in einem Schritt; die Prüfung „Webhook-ID schon belegt“ greift, solange eine Automation dieselbe ID nutzt. Die Taste „Türklingel testen“ blendet das Live-Bild der Eingangskamera auf dem Rahmen ein. Mit Lumora 2.3.0 (heute Memolumen) meldet die Integration erwartungsgemäß, dass der Bewegungsmelder eine neuere Version braucht.
+
+**Noch nicht getestet:** echtes Klingeln über Sensor und Shelly-Webhook, Bewegungsmelder mit Memolumen 3.0.0, erneute Anmeldung bei geändertem Token.
 
 ---
 
 ## English
 
-Home Assistant integration for the **Lumora** picture frame app (requires Lumora 2.3.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/lumora-homeassistant` (type *Integration*), restart Home Assistant, then add the **Lumora** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Lumora under *Home Assistant → Control via REST*. Operation & schedule: set mode (schedule / always on / motion only), time without motion, night behaviour and up to three periods directly in the options (requires Lumora 2.3.5+). Motion: pair one or more motion/presence sensors of the room (requires Lumora 2.3.2+); Lumora then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `lumora.show_camera`, `lumora.show_image`, `lumora.notify`, `lumora.dismiss`, `lumora.display_on_for`.
+Home Assistant integration for the **Memolumen** picture frame app (requires Memolumen 3.0.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/memolumen-homeassistant` (type *Integration*), restart Home Assistant, then add the **Memolumen** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Memolumen under *Home Assistant → Control via REST*. Operation & schedule: set mode (schedule / always on / motion only), time without motion, night behaviour and up to three periods directly in the options (requires Memolumen 3.0.0+). Motion: pair one or more motion/presence sensors of the room (requires Memolumen 3.0.0+); Memolumen then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `memolumen.show_camera`, `memolumen.show_image`, `memolumen.notify`, `memolumen.dismiss`, `memolumen.display_on_for`.
 
-Status: the Lumora API endpoints used by the integration are tested; the integration itself has not yet been tested in a running Home Assistant.
+Status: the Memolumen API endpoints used by the integration are tested; the integration itself has not yet been tested in a running Home Assistant.
 
 ## Lizenz
 

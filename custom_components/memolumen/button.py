@@ -7,10 +7,10 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import LumoraConfigEntry
-from .entity import LumoraEntity
+from . import MemolumenConfigEntry
+from .entity import MemolumenEntity
 
-# key → Befehl der Lumora-Schnittstelle (None = Einblendung schließen)
+# key → Befehl der Memolumen-Schnittstelle (None = Einblendung schließen)
 BUTTONS = (
     (ButtonEntityDescription(key="next", icon="mdi:skip-next"), "next"),
     (ButtonEntityDescription(key="prev", icon="mdi:skip-previous"), "prev"),
@@ -21,15 +21,15 @@ BUTTONS = (
 )
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
     coordinator = entry.runtime_data.coordinator
-    entities: list[ButtonEntity] = [LumoraButton(coordinator, d, cmd) for d, cmd in BUTTONS]
+    entities: list[ButtonEntity] = [MemolumenButton(coordinator, d, cmd) for d, cmd in BUTTONS]
     if entry.runtime_data.doorbell.configured:
-        entities.append(LumoraDoorbellTest(coordinator, entry.runtime_data.doorbell))
+        entities.append(MemolumenDoorbellTest(coordinator, entry.runtime_data.doorbell))
     async_add_entities(entities)
 
 
-class LumoraButton(LumoraEntity, ButtonEntity):
+class MemolumenButton(MemolumenEntity, ButtonEntity):
     def __init__(self, coordinator, description: ButtonEntityDescription, command: str | None) -> None:
         super().__init__(coordinator, description.key)
         self.entity_description = description
@@ -42,7 +42,7 @@ class LumoraButton(LumoraEntity, ButtonEntity):
             await self.coordinator.api.command(self._command)
 
 
-class LumoraDoorbellTest(LumoraEntity, ButtonEntity):
+class MemolumenDoorbellTest(MemolumenEntity, ButtonEntity):
     """Blendet die Türklingel-Kamera probehalber ein."""
 
     _attr_icon = "mdi:doorbell-video"

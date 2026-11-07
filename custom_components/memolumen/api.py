@@ -1,4 +1,4 @@
-"""Zugriff auf die REST-Schnittstelle von Lumora (/api/ext/…, Bearer-Token)."""
+"""Zugriff auf die REST-Schnittstelle von Memolumen (/api/ext/…, Bearer-Token)."""
 
 from __future__ import annotations
 
@@ -8,16 +8,16 @@ from typing import Any
 import aiohttp
 
 
-class LumoraError(Exception):
-    """Allgemeiner Fehler beim Zugriff auf Lumora."""
+class MemolumenError(Exception):
+    """Allgemeiner Fehler beim Zugriff auf Memolumen."""
 
 
-class LumoraAuthError(LumoraError):
+class MemolumenAuthError(MemolumenError):
     """API-Token fehlt oder ist falsch."""
 
 
-class LumoraApi:
-    """Kleiner Client für die Lumora-Steuerschnittstelle."""
+class MemolumenApi:
+    """Kleiner Client für die Memolumen-Steuerschnittstelle."""
 
     def __init__(self, session: aiohttp.ClientSession, url: str, token: str, verify_ssl: bool) -> None:
         self._session = session
@@ -37,16 +37,16 @@ class LumoraApi:
                     method, f"{self._url}{path}", json=body, headers=headers, ssl=self._ssl
                 ) as resp:
                     if resp.status == 401:
-                        raise LumoraAuthError("API-Token fehlt oder ist falsch")
+                        raise MemolumenAuthError("API-Token fehlt oder ist falsch")
                     data = await resp.json(content_type=None)
                     if resp.status >= 400:
-                        raise LumoraError((data or {}).get("error") or f"HTTP {resp.status}")
+                        raise MemolumenError((data or {}).get("error") or f"HTTP {resp.status}")
                     return data
-        except LumoraError:
+        except MemolumenError:
             raise
         except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
             detail = "Zeitüberschreitung (Tablet aus, im Standby oder Adresse falsch?)" if isinstance(err, asyncio.TimeoutError) else (str(err) or type(err).__name__)
-            raise LumoraError(f"Lumora nicht erreichbar: {detail}") from err
+            raise MemolumenError(f"Memolumen nicht erreichbar: {detail}") from err
 
     async def state(self) -> dict[str, Any]:
         return await self._request("GET", "/api/ext/state")
@@ -89,7 +89,7 @@ class LumoraApi:
         await self._request("POST", "/api/ext/motion-source", {"enabled": enabled, "sensors": sensors})
 
     async def set_schedule_full(self, schedule: dict[str, Any]) -> None:
-        """{on, entries?, nightMode} – Lumora 2.3.5+"""
+        """{on, entries?, nightMode} – Memolumen 3.0.0+"""
         await self._request("POST", "/api/ext/schedule", schedule)
 
     async def set_motion_settings(self, settings: dict[str, Any]) -> None:

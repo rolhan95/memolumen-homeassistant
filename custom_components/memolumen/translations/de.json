@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Lumora-Bilderrahmen verbinden",
-        "description": "Adresse der Lumora-Weboberfläche (z. B. https://192.168.1.50:8443) und API-Token aus Lumora unter „Home Assistant → Steuerung per REST“.",
+        "title": "Memolumen-Bilderrahmen verbinden",
+        "description": "Adresse der Memolumen-Weboberfläche (z. B. https://192.168.1.50:8443) und API-Token aus Memolumen unter „Home Assistant → Steuerung per REST“.",
         "data": {
           "url": "Adresse",
           "token": "API-Token",
@@ -12,14 +12,14 @@
       },
       "reauth_confirm": {
         "title": "API-Token erneuern",
-        "description": "Der API-Token wurde in Lumora geändert. Bitte den aktuellen Token aus „Home Assistant → Steuerung per REST“ eintragen.",
+        "description": "Der API-Token wurde in Memolumen geändert. Bitte den aktuellen Token aus „Home Assistant → Steuerung per REST“ eintragen.",
         "data": {
           "token": "API-Token"
         }
       }
     },
     "error": {
-      "cannot_connect": "Lumora ist unter dieser Adresse nicht erreichbar.",
+      "cannot_connect": "Memolumen ist unter dieser Adresse nicht erreichbar.",
       "invalid_auth": "Der API-Token ist falsch."
     },
     "abort": {
@@ -95,11 +95,11 @@
   "services": {
     "show_camera": {
       "name": "Kamera einblenden",
-      "description": "Zeigt das Live-Bild einer Kamera aus Home Assistant auf dem Bilderrahmen (z. B. Türkamera beim Klingeln). Lumora braucht dafür die Home-Assistant-Adresse und einen Token in seinen Einstellungen.",
+      "description": "Zeigt das Live-Bild einer Kamera aus Home Assistant auf dem Bilderrahmen (z. B. Türkamera beim Klingeln). Memolumen braucht dafür die Home-Assistant-Adresse und einen Token in seinen Einstellungen.",
       "fields": {
         "device_id": {
           "name": "Bilderrahmen",
-          "description": "Leer = alle Lumora-Bilderrahmen."
+          "description": "Leer = alle Memolumen-Bilderrahmen."
         },
         "camera": {
           "name": "Kamera",
@@ -125,7 +125,7 @@
       "fields": {
         "device_id": {
           "name": "Bilderrahmen",
-          "description": "Leer = alle Lumora-Bilderrahmen."
+          "description": "Leer = alle Memolumen-Bilderrahmen."
         },
         "url": {
           "name": "Bildadresse",
@@ -151,7 +151,7 @@
       "fields": {
         "device_id": {
           "name": "Bilderrahmen",
-          "description": "Leer = alle Lumora-Bilderrahmen."
+          "description": "Leer = alle Memolumen-Bilderrahmen."
         },
         "message": {
           "name": "Nachricht",
@@ -173,7 +173,7 @@
       "fields": {
         "device_id": {
           "name": "Bilderrahmen",
-          "description": "Leer = alle Lumora-Bilderrahmen."
+          "description": "Leer = alle Memolumen-Bilderrahmen."
         }
       }
     },
@@ -183,7 +183,7 @@
       "fields": {
         "device_id": {
           "name": "Bilderrahmen",
-          "description": "Leer = alle Lumora-Bilderrahmen."
+          "description": "Leer = alle Memolumen-Bilderrahmen."
         },
         "minutes": {
           "name": "Minuten",
@@ -196,7 +196,7 @@
     "step": {
       "init": {
         "title": "Bewegungsmelder und Türklingel",
-        "description": "**Bewegungsmelder im Raum:** Meldet ein gewählter Melder Bewegung, gelten in Lumora die Regeln aus „Bewegung“ (nachts einschalten, Dauer, tagsüber ausschalten ohne Bewegung) – auch ohne Kamera am Tablet. Feld leeren, um die Kopplung aufzuheben.\n\n**Türklingel:** Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Auslösen können Entitäten (z. B. Klingel-Eingang) und/oder ein Webhook, den z. B. ein Shelly aufruft. Lumora braucht unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken.\n\nAktuelle Webhook-Adresse: {webhook_url}",
+        "description": "**Bewegungsmelder im Raum:** Meldet ein gewählter Melder Bewegung, gelten in Memolumen die Regeln aus „Bewegung“ (nachts einschalten, Dauer, tagsüber ausschalten ohne Bewegung) – auch ohne Kamera am Tablet. Feld leeren, um die Kopplung aufzuheben.\n\n**Türklingel:** Beim Klingeln blendet der Rahmen das Live-Bild der gewählten Kamera ein – auch nachts oder im Abwesenheitsmodus. Auslösen können Entitäten (z. B. Klingel-Eingang) und/oder ein Webhook, den z. B. ein Shelly aufruft. Memolumen braucht unter „Home Assistant → Verbindung zu Home Assistant“ die Adresse von Home Assistant und ein langlebiges Zugriffstoken.\n\nAktuelle Webhook-Adresse: {webhook_url}",
         "data": {
           "motion_sensors": "Bewegungsmelder im Raum",
           "doorbell_triggers": "Auslöser (Türklingel)",
@@ -223,7 +223,7 @@
         "sections": {
           "operation": {
             "name": "Betrieb & Zeitplan",
-            "description": "Wann der Rahmen an ist. Die Werte kommen aus dem Rahmen und werden beim Speichern dorthin übertragen (benötigt Lumora 2.3.5).",
+            "description": "Wann der Rahmen an ist. Die Werte kommen aus dem Rahmen und werden beim Speichern dorthin übertragen (benötigt Memolumen 3.0.0).",
             "data": {
               "mode": "Betriebsart",
               "idle_off_minutes": "Ausschalten ohne Bewegung nach",

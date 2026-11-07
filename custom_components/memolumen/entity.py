@@ -1,4 +1,4 @@
-"""Gemeinsame Basis für alle Lumora-Entitäten."""
+"""Gemeinsame Basis für alle Memolumen-Entitäten."""
 
 from __future__ import annotations
 
@@ -6,13 +6,13 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import LumoraCoordinator
+from .coordinator import MemolumenCoordinator
 
 
-class LumoraEntity(CoordinatorEntity[LumoraCoordinator]):
+class MemolumenEntity(CoordinatorEntity[MemolumenCoordinator]):
     _attr_has_entity_name = True
 
-    def __init__(self, coordinator: LumoraCoordinator, key: str) -> None:
+    def __init__(self, coordinator: MemolumenCoordinator, key: str) -> None:
         super().__init__(coordinator)
         device = coordinator.data.get("device") or {}
         device_id = device.get("id") or coordinator.config_entry.entry_id
@@ -20,9 +20,9 @@ class LumoraEntity(CoordinatorEntity[LumoraCoordinator]):
         self._attr_translation_key = key
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_id)},
-            name=f"Lumora {device.get('name') or ''}".strip(),
+            name=f"Memolumen {device.get('name') or ''}".strip(),
             manufacturer="Suderland IT",
-            model="Lumora Bilderrahmen",
+            model="Memolumen Bilderrahmen",
             sw_version=coordinator.data.get("version"),
             configuration_url=coordinator.api.url + "/admin/",
         )

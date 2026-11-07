@@ -1,5 +1,5 @@
 """Bewegungsmelder im Raum: Bewegung aus Home Assistant an den Rahmen melden.
-Lumora wendet darauf die Regeln aus „Bewegung“ an (nachts einschalten, Dauer, tagsüber ausschalten ohne Bewegung)."""
+Memolumen wendet darauf die Regeln aus „Bewegung“ an (nachts einschalten, Dauer, tagsüber ausschalten ohne Bewegung)."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from homeassistant.const import STATE_ON
 from homeassistant.core import Event, EventStateChangedData, HomeAssistant, callback
 from homeassistant.helpers.event import async_track_state_change_event, async_track_time_interval
 
-from .api import LumoraApi, LumoraError
+from .api import MemolumenApi, MemolumenError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ KEEPALIVE = timedelta(seconds=60)
 
 
 class RoomMotion:
-    def __init__(self, hass: HomeAssistant, api: LumoraApi, sensors: list[str]) -> None:
+    def __init__(self, hass: HomeAssistant, api: MemolumenApi, sensors: list[str]) -> None:
         self.hass = hass
         self.api = api
         self.sensors = list(sensors or [])
@@ -33,14 +33,14 @@ class RoomMotion:
         return names
 
     async def async_start(self):
-        """Kopplung an Lumora melden und Listener anmelden; liefert eine Abmeldefunktion (oder None)."""
+        """Kopplung an Memolumen melden und Listener anmelden; liefert eine Abmeldefunktion (oder None)."""
         try:
             await self.api.set_motion_source(bool(self.sensors), self._names())
-        except LumoraError as err:
+        except MemolumenError as err:
             if self.sensors:
-                _LOGGER.warning("Lumora: Bewegungsmelder konnte nicht gekoppelt werden (Lumora 2.3.2 oder neuer nötig): %s", err)
+                _LOGGER.warning("Memolumen: Bewegungsmelder konnte nicht gekoppelt werden (Memolumen 3.0.0 oder neuer nötig): %s", err)
             else:
-                _LOGGER.debug("Lumora: Entkoppeln nicht möglich (ältere Lumora-Version?): %s", err)
+                _LOGGER.debug("Memolumen: Entkoppeln nicht möglich (ältere Memolumen-Version?): %s", err)
             return None
         if not self.sensors:
             return None
@@ -70,8 +70,8 @@ class RoomMotion:
         try:
             await self.api.motion()
             self._warned = False
-            _LOGGER.debug("Lumora: Bewegung von %s gemeldet", source)
-        except LumoraError as err:
+            _LOGGER.debug("Memolumen: Bewegung von %s gemeldet", source)
+        except MemolumenError as err:
             if not self._warned:
-                _LOGGER.warning("Lumora: Bewegung konnte nicht gemeldet werden: %s", err)
+                _LOGGER.warning("Memolumen: Bewegung konnte nicht gemeldet werden: %s", err)
                 self._warned = True

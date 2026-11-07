@@ -7,16 +7,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from . import LumoraConfigEntry
+from . import MemolumenConfigEntry
 from .const import MOTION_HOLD_SECONDS
-from .entity import LumoraEntity
+from .entity import MemolumenEntity
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
-    async_add_entities([LumoraMotion(entry.runtime_data.coordinator, "motion")])
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+    async_add_entities([MemolumenMotion(entry.runtime_data.coordinator, "motion")])
 
 
-class LumoraMotion(LumoraEntity, BinarySensorEntity):
+class MemolumenMotion(MemolumenEntity, BinarySensorEntity):
     _attr_device_class = BinarySensorDeviceClass.MOTION
 
     @property

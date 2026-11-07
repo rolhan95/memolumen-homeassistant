@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Connect a Lumora picture frame",
-        "description": "Address of the Lumora web interface (e.g. https://192.168.1.50:8443) and the API token from Lumora under \"Home Assistant → Control via REST\".",
+        "title": "Connect a Memolumen picture frame",
+        "description": "Address of the Memolumen web interface (e.g. https://192.168.1.50:8443) and the API token from Memolumen under \"Home Assistant → Control via REST\".",
         "data": {
           "url": "Address",
           "token": "API token",
@@ -12,14 +12,14 @@
       },
       "reauth_confirm": {
         "title": "Renew API token",
-        "description": "The API token was changed in Lumora. Please enter the current token from \"Home Assistant → Control via REST\".",
+        "description": "The API token was changed in Memolumen. Please enter the current token from \"Home Assistant → Control via REST\".",
         "data": {
           "token": "API token"
         }
       }
     },
     "error": {
-      "cannot_connect": "Lumora cannot be reached at this address.",
+      "cannot_connect": "Memolumen cannot be reached at this address.",
       "invalid_auth": "The API token is wrong."
     },
     "abort": {
@@ -95,11 +95,11 @@
   "services": {
     "show_camera": {
       "name": "Show camera",
-      "description": "Shows the live image of a Home Assistant camera on the picture frame (e.g. door camera when the bell rings). Lumora needs the Home Assistant address and a token in its settings.",
+      "description": "Shows the live image of a Home Assistant camera on the picture frame (e.g. door camera when the bell rings). Memolumen needs the Home Assistant address and a token in its settings.",
       "fields": {
         "device_id": {
           "name": "Picture frame",
-          "description": "Empty = all Lumora picture frames."
+          "description": "Empty = all Memolumen picture frames."
         },
         "camera": {
           "name": "Camera",
@@ -125,7 +125,7 @@
       "fields": {
         "device_id": {
           "name": "Picture frame",
-          "description": "Empty = all Lumora picture frames."
+          "description": "Empty = all Memolumen picture frames."
         },
         "url": {
           "name": "Image address",
@@ -151,7 +151,7 @@
       "fields": {
         "device_id": {
           "name": "Picture frame",
-          "description": "Empty = all Lumora picture frames."
+          "description": "Empty = all Memolumen picture frames."
         },
         "message": {
           "name": "Message",
@@ -173,7 +173,7 @@
       "fields": {
         "device_id": {
           "name": "Picture frame",
-          "description": "Empty = all Lumora picture frames."
+          "description": "Empty = all Memolumen picture frames."
         }
       }
     },
@@ -183,7 +183,7 @@
       "fields": {
         "device_id": {
           "name": "Picture frame",
-          "description": "Empty = all Lumora picture frames."
+          "description": "Empty = all Memolumen picture frames."
         },
         "minutes": {
           "name": "Minutes",
@@ -196,7 +196,7 @@
     "step": {
       "init": {
         "title": "Motion sensors and doorbell",
-        "description": "**Motion sensor in the room:** When a selected sensor detects motion, Lumora applies its \"Motion\" rules (turn on at night, duration, turn off during the day without motion) – even without the tablet camera. Clear the field to unpair.\n\n**Doorbell:** When the doorbell rings, the frame shows the live image of the selected camera – even at night or in away mode. It can be triggered by entities (e.g. a doorbell input) and/or a webhook called e.g. by a Shelly. Lumora needs the Home Assistant address and a long-lived access token under \"Home Assistant → Connection to Home Assistant\".\n\nCurrent webhook address: {webhook_url}",
+        "description": "**Motion sensor in the room:** When a selected sensor detects motion, Memolumen applies its \"Motion\" rules (turn on at night, duration, turn off during the day without motion) – even without the tablet camera. Clear the field to unpair.\n\n**Doorbell:** When the doorbell rings, the frame shows the live image of the selected camera – even at night or in away mode. It can be triggered by entities (e.g. a doorbell input) and/or a webhook called e.g. by a Shelly. Memolumen needs the Home Assistant address and a long-lived access token under \"Home Assistant → Connection to Home Assistant\".\n\nCurrent webhook address: {webhook_url}",
         "data": {
           "motion_sensors": "Motion sensors in the room",
           "doorbell_triggers": "Trigger (doorbell)",
@@ -223,7 +223,7 @@
         "sections": {
           "operation": {
             "name": "Operation & schedule",
-            "description": "When the frame is on. Values are read from the frame and sent to it on save (requires Lumora 2.3.5).",
+            "description": "When the frame is on. Values are read from the frame and sent to it on save (requires Memolumen 3.0.0).",
             "data": {
               "mode": "Mode",
               "idle_off_minutes": "Turn off without motion after",

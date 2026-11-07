@@ -3,7 +3,7 @@ show_camera:
     device_id:
       selector:
         device:
-          integration: lumora
+          integration: memolumen
           multiple: true
     camera:
       required: true
@@ -29,7 +29,7 @@ show_image:
     device_id:
       selector:
         device:
-          integration: lumora
+          integration: memolumen
           multiple: true
     url:
       required: true
@@ -54,7 +54,7 @@ notify:
     device_id:
       selector:
         device:
-          integration: lumora
+          integration: memolumen
           multiple: true
     message:
       required: true
@@ -77,7 +77,7 @@ dismiss:
     device_id:
       selector:
         device:
-          integration: lumora
+          integration: memolumen
           multiple: true
 
 display_on_for:
@@ -85,7 +85,7 @@ display_on_for:
     device_id:
       selector:
         device:
-          integration: lumora
+          integration: memolumen
           multiple: true
     minutes:
       required: true

@@ -11,29 +11,29 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import LumoraConfigEntry
-from .api import LumoraApi
-from .entity import LumoraEntity
+from . import MemolumenConfigEntry
+from .api import MemolumenApi
+from .entity import MemolumenEntity
 
 
 @dataclass(frozen=True, kw_only=True)
-class LumoraSwitchDescription(SwitchEntityDescription):
+class MemolumenSwitchDescription(SwitchEntityDescription):
     value: Callable[[dict[str, Any]], bool]
-    set_fn: Callable[[LumoraApi, bool], Awaitable[None]]
+    set_fn: Callable[[MemolumenApi, bool], Awaitable[None]]
 
 
 SWITCHES = (
-    LumoraSwitchDescription(
+    MemolumenSwitchDescription(
         key="display", icon="mdi:monitor",
         value=lambda d: bool(d.get("displayOn")),
         set_fn=lambda api, on: api.set_display(on),
     ),
-    LumoraSwitchDescription(
+    MemolumenSwitchDescription(
         key="away", icon="mdi:home-export-outline",
         value=lambda d: bool(d.get("away")),
         set_fn=lambda api, on: api.set_away(on),
     ),
-    LumoraSwitchDescription(
+    MemolumenSwitchDescription(
         key="schedule", icon="mdi:calendar-clock", entity_category=EntityCategory.CONFIG,
         value=lambda d: bool(d.get("scheduleEnabled")),
         set_fn=lambda api, on: api.set_schedule(on),
@@ -41,15 +41,15 @@ SWITCHES = (
 )
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(LumoraSwitch(coordinator, d) for d in SWITCHES)
+    async_add_entities(MemolumenSwitch(coordinator, d) for d in SWITCHES)
 
 
-class LumoraSwitch(LumoraEntity, SwitchEntity):
-    entity_description: LumoraSwitchDescription
+class MemolumenSwitch(MemolumenEntity, SwitchEntity):
+    entity_description: MemolumenSwitchDescription
 
-    def __init__(self, coordinator, description: LumoraSwitchDescription) -> None:
+    def __init__(self, coordinator, description: MemolumenSwitchDescription) -> None:
         super().__init__(coordinator, description.key)
         self.entity_description = description
 

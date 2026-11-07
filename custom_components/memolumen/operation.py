@@ -1,4 +1,4 @@
-"""Betrieb & Zeitplan: Formularbereich der Optionen, Vorbelegung aus Lumora und Übertragung an den Rahmen."""
+"""Betrieb & Zeitplan: Formularbereich der Optionen, Vorbelegung aus Memolumen und Übertragung an den Rahmen."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ WAKE_DURATION = "wake_duration_minutes"
 NIGHT_MODE = "night_mode"
 BLOCKS = 3
 
-# Wochentage wie in Lumora: 0 = Sonntag … 6 = Samstag; Reihenfolge im Formular Mo–So
+# Wochentage wie in Memolumen: 0 = Sonntag … 6 = Samstag; Reihenfolge im Formular Mo–So
 WEEKDAYS = ["1", "2", "3", "4", "5", "6", "0"]
 
 
@@ -39,7 +39,7 @@ def _off(n: int) -> str:
 
 
 def supported(state: dict[str, Any] | None) -> bool:
-    """Kann der Rahmen Zeitplan und Bewegungsregeln über die Schnittstelle setzen (Lumora 2.3.5+)?"""
+    """Kann der Rahmen Zeitplan und Bewegungsregeln über die Schnittstelle setzen (Memolumen 3.0.0+)?"""
     return bool(state) and isinstance(state.get("schedule"), dict) and isinstance(state.get("motionSettings"), dict)
 
 
@@ -91,7 +91,7 @@ def schema() -> vol.Schema:
     return vol.Schema(fields)
 
 
-def to_lumora(values: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], str | None]:
+def to_memolumen(values: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], str | None]:
     """Formularwerte → (Zeitplan, Bewegungsregeln, Fehlerschlüssel)."""
     mode = values.get(MODE, MODE_SCHEDULE)
     entries = []

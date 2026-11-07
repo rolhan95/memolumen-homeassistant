@@ -12,8 +12,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from . import LumoraConfigEntry
-from .entity import LumoraEntity
+from . import MemolumenConfigEntry
+from .entity import MemolumenEntity
 
 
 def _ts(value: Any):
@@ -21,39 +21,39 @@ def _ts(value: Any):
 
 
 @dataclass(frozen=True, kw_only=True)
-class LumoraSensorDescription(SensorEntityDescription):
+class MemolumenSensorDescription(SensorEntityDescription):
     value: Callable[[dict[str, Any]], Any]
 
 
 SENSORS = (
-    LumoraSensorDescription(
+    MemolumenSensorDescription(
         key="lux", device_class=SensorDeviceClass.ILLUMINANCE, native_unit_of_measurement=LIGHT_LUX,
         state_class=SensorStateClass.MEASUREMENT, value=lambda d: d.get("lux"),
     ),
-    LumoraSensorDescription(
+    MemolumenSensorDescription(
         key="photos", icon="mdi:image-multiple", state_class=SensorStateClass.MEASUREMENT,
         value=lambda d: d.get("photos"),
     ),
-    LumoraSensorDescription(
+    MemolumenSensorDescription(
         key="next_on", device_class=SensorDeviceClass.TIMESTAMP, icon="mdi:monitor-shimmer",
         value=lambda d: _ts(d.get("nextOn")),
     ),
-    LumoraSensorDescription(
+    MemolumenSensorDescription(
         key="version", icon="mdi:information-outline", entity_category=EntityCategory.DIAGNOSTIC,
         value=lambda d: d.get("version"),
     ),
 )
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: LumoraConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: MemolumenConfigEntry, async_add_entities: AddConfigEntryEntitiesCallback) -> None:
     coordinator = entry.runtime_data.coordinator
-    async_add_entities(LumoraSensor(coordinator, d) for d in SENSORS)
+    async_add_entities(MemolumenSensor(coordinator, d) for d in SENSORS)
 
 
-class LumoraSensor(LumoraEntity, SensorEntity):
-    entity_description: LumoraSensorDescription
+class MemolumenSensor(MemolumenEntity, SensorEntity):
+    entity_description: MemolumenSensorDescription
 
-    def __init__(self, coordinator, description: LumoraSensorDescription) -> None:
+    def __init__(self, coordinator, description: MemolumenSensorDescription) -> None:
         super().__init__(coordinator, description.key)
         self.entity_description = description
 
