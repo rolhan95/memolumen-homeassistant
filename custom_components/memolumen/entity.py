@@ -21,7 +21,7 @@ class MemolumenEntity(CoordinatorEntity[MemolumenCoordinator]):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_id)},
             name=f"Memolumen {device.get('name') or ''}".strip(),
-            manufacturer="Suderland IT",
+            manufacturer="Roland Hanz",
             model="Memolumen Bilderrahmen",
             sw_version=coordinator.data.get("version"),
             configuration_url=coordinator.api.url + "/admin/",

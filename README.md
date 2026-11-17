@@ -22,10 +22,6 @@ Ohne HACS: den Ordner `custom_components/memolumen` nach `config/custom_componen
 
 > MQTT in Memolumen und diese Integration nicht gleichzeitig nutzen – sonst erscheint der Rahmen doppelt.
 
-## Umstieg von der Lumora-Integration
-
-Bis Version 1.4.0 hieß diese Integration „Lumora“ (Repository `rolhan95/lumora-homeassistant`). Weil sich die Domain geändert hat, ist es eine neue Integration: in HACS dieses Repository hinzufügen, **Memolumen** installieren und einrichten, danach die alte Lumora-Integration entfernen. Entitäten heißen danach `…memolumen…`; Automationen bitte auf die neuen Entitäten und die Aktionen `memolumen.*` umstellen.
-
 ## Funktionen
 
 | Art | Entitäten |
@@ -104,13 +100,7 @@ Damit Memolumen das Kamerabild abrufen kann, müssen in Memolumen unter *Home As
 
 ## Teststand
 
-**2.0.0 (neuer Name):** Die Integration heißt jetzt „Memolumen“ (Domain `memolumen`, vorher `lumora`); die Schnittstelle zum Rahmen ist unverändert. Geprüft ist nur, dass alle Python-Dateien fehlerfrei geparst werden; in Home Assistant ist 2.0.0 noch nicht getestet. Die folgenden Angaben stammen aus den Tests unter dem früheren Namen.
-
-Getestet sind die Memolumen-Schnittstellen, die die Integration aufruft (Status, Anzeige, Abwesenheit, Zeitplan, Helligkeit, Befehle, Benachrichtigung, Abweisung eines falschen Tokens) – mit Lumora 2.3.0 (heute Memolumen) auf einem Testrechner.
-
-In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 (heute Memolumen) auf einem Windows-Tablet: Installation über HACS (1.2.0, Update auf 1.3.1), Einrichtung mit Adresse und API-Token, Entitäten liefern Werte (Bildschirm, Version, Helligkeit, Sensoren). Der Optionsdialog mit Türklingel-Sensor, Webhook-ID, Kamera und Bewegungsmelder speichert in einem Schritt; die Prüfung „Webhook-ID schon belegt“ greift, solange eine Automation dieselbe ID nutzt. Die Taste „Türklingel testen“ blendet das Live-Bild der Eingangskamera auf dem Rahmen ein. Mit Lumora 2.3.0 (heute Memolumen) meldet die Integration erwartungsgemäß, dass der Bewegungsmelder eine neuere Version braucht.
-
-**Noch nicht getestet:** echtes Klingeln über Sensor und Shelly-Webhook, Bewegungsmelder mit Memolumen 3.0.0, erneute Anmeldung bei geändertem Token.
+**Noch nicht getestet:** echtes Klingeln über Sensor und Shelly-Webhook, Bewegungsmelder mit Memolumen 3.x, erneute Anmeldung bei geändertem Token.
 
 ---
 
@@ -118,8 +108,8 @@ In einem echten Home Assistant (2026.11) mit Lumora 2.3.0 (heute Memolumen) auf 
 
 Home Assistant integration for the **Memolumen** picture frame app (requires Memolumen 3.0.0+). Install via HACS → Custom repositories → `https://github.com/rolhan95/memolumen-homeassistant` (type *Integration*), restart Home Assistant, then add the **Memolumen** integration with the frame address (e.g. `https://192.168.1.50:8443`) and the API token shown in Memolumen under *Home Assistant → Control via REST*. Operation & schedule: set mode (schedule / always on / motion only), time without motion, night behaviour and up to three periods directly in the options (requires Memolumen 3.0.0+). Motion: pair one or more motion/presence sensors of the room (requires Memolumen 3.0.0+); Memolumen then applies its motion rules without the tablet camera. Doorbell: in the integration options pick one or more trigger entities and/or a webhook (e.g. for a Shelly) and a camera – the frame then shows the camera when the doorbell rings (with a test button). Provides switches (screen, away mode, schedule), brightness, sensors, motion, buttons, a notify entity and the actions `memolumen.show_camera`, `memolumen.show_image`, `memolumen.notify`, `memolumen.dismiss`, `memolumen.display_on_for`.
 
-Status: the Memolumen API endpoints used by the integration are tested; the integration itself has not yet been tested in a running Home Assistant.
+Not yet tested: a real doorbell ring via sensor and Shelly webhook, motion sensors with Memolumen 3.x, re-authentication after a changed token.
 
 ## Lizenz
 
-MIT – © 2026 Suderland IT
+MIT – © 2026 Roland Hanz
